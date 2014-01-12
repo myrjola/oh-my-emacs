@@ -110,14 +110,14 @@ BTW, oh-my-emacs will use =helm= in evil-leader if available. So now you can do
 #+NAME: evil-leader
 #+BEGIN_SRC emacs-lisp
   (defun ome-evil-leader-setup ()
-    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-leader ",")
     (if (featurep 'helm)
         (evil-leader/set-key
           "e" 'helm-find-files
-          "b" 'helm-buffers-list)
+          "," 'helm-buffers-list)
       (evil-leader/set-key
         "e" 'find-file
-        "b" 'switch-to-buffer))
+        "," 'switch-to-buffer))
     (if (featurep 'expand-region)
         (progn
           (setq expand-region-contract-fast-key "z")
