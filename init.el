@@ -56,4 +56,6 @@
 ;; load up the ome
 (org-babel-load-file (expand-file-name "ome.org" ome-dir))
 
+;; disable debug-on-error
+(setq debug-on-error nil)
 ;;; init.el ends here
