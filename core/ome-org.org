@@ -256,5 +256,211 @@ math]]" for details.
     (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
 #+END_SRC
 
+* Agenda configuration
+
+  #+begin_src emacs-lisp
+    (require 'org-protocol)
+    (require 'org-agenda)
+    (require 'org-habit)
+
+    ; Shortcut to gtd-file
+    (defun gtd ()
+       (interactive)
+       (find-file "~/org/gtd.org")
+    )
+
+    ; Bulk archive done in subtree
+    (defun my-org-archive-done-tasks ()
+      (interactive)
+      (org-map-entries 'org-archive-subtree "/DONE" 'file))
+
+
+    (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+    (setq org-mobile-files
+          (list "~/org/gtd.org" "~/org/notes.org" "~/org/captures.org" "~/org/journal.org"))
+
+    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+
+    (setq org-agenda-files org-mobile-files)
+
+    ; I prefer return to activate a link
+    (setq org-return-follows-link t)
+
+    ;;; org agenda -- leave in emacs mode but add j & k
+    (define-key org-agenda-mode-map "j" 'evil-next-line)
+    (define-key org-agenda-mode-map "k" 'evil-previous-line)
+    (define-key org-agenda-mode-map "s" 'org-agenda-schedule)
+    (define-key org-agenda-mode-map "d" 'org-agenda-deadline)
+
+    (setq org-default-notes-file (concat org-directory "/captures.org"))
+
+    (define-key evil-normal-state-map (kbd ",ag") 'org-agenda)
+    (define-key evil-normal-state-map (kbd ",cj") 'org-clock-goto)
+    (define-key evil-normal-state-map (kbd ",mi") 'org-mobile-pull)
+    (define-key evil-normal-state-map (kbd ",me") 'org-mobile-push)
+
+    (setq org-capture-templates
+          (quote
+           (("w"
+             "Default template"
+             entry
+             (file+headline "~/org/captures.org" "Notes")
+             "* %c\n%u\n %i"
+             :empty-lines 1)
+          ("l" "ticket todo" entry (file+olp "~/org/gtd.org" "RELEX" "Tasks")
+                 "* TODO %c\n%U\n%i" :clock-in t :clock-resume t)
+          ("r" "RELEX todo" entry (file+olp "~/org/gtd.org" "RELEX" "Tasks")
+                 "* TODO %?\n%U" :clock-in t :clock-resume t)
+          ("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+                 "* TODO %?\n%i")
+          ("c" "Capture" entry (file "~/org/captures.org")
+                 "* %?\nEntered on %U\n%i")
+          ("h" "Habit" entry (file+headline "~/org/gtd.org" "Habits")
+                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+          ("j" "Journal" entry (file+datetree "~/org/journal.org")
+                 "* %?\nEntered on %U\n  %i"))))
+
+    ; position the habit graph on the agenda to the right of the default
+    (setq org-habit-graph-column 50)
+    (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
+
+
+    ;; Compact the block agenda view
+    (setq org-agenda-compact-blocks t)
+
+    (setq org-todo-keywords
+          (quote ((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)"))))
+
+    ;; Keep tasks with timestamps on the global todo lists
+    (setq org-agenda-todo-ignore-timestamp nil)
+
+    ;; Remove completed deadline tasks from the agenda view
+    (setq org-agenda-skip-deadline-if-done t)
+
+    ;; Remove completed scheduled tasks from the agenda view
+    (setq org-agenda-skip-scheduled-if-done t)
+
+    ;; Automatic mobileorg syncing
+    (defvar org-mobile-sync-timer nil)
+    (defvar org-mobile-sync-idle-secs (* 60 10))
+    (defun org-mobile-sync ()
+      (interactive)
+      (org-mobile-pull)
+      (org-mobile-push))
+
+    (defun org-mobile-sync-enable ()
+      "enable mobile org idle sync"
+      (interactive)
+      (setq org-mobile-sync-timer
+            (run-with-idle-timer org-mobile-sync-idle-secs t
+                                 'org-mobile-sync)));
+
+    (defun org-mobile-sync-disable ()
+      "disable mobile org idle sync"
+      (interactive)
+      (cancel-timer org-mobile-sync-timer))
+    (org-mobile-sync-enable)
+
+    (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+
+  #+end_src
+
+* Evil keybindings
+
+#+begin_src emacs-lisp
+
+  (define-minor-mode evil-org-mode
+    "Buffer local minor mode for evil-org"
+    :init-value nil
+    :lighter " EvilOrg"
+    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+    :group 'evil-org)
+
+  (add-hook 'org-mode-hook 'evil-org-mode) ;; only load with org-mode
+
+  (define-key evil-normal-state-map (kbd ",sl") 'org-store-link)
+  (define-key evil-normal-state-map (kbd ",ca") 'org-capture)
+  (define-key evil-normal-state-map (kbd ",gt") 'gtd)
+  (define-key evil-normal-state-map (kbd ",at") 'org-attach)
+  (define-key evil-normal-state-map (kbd ",ba") 'previous-buffer)
+
+
+  ;; regular normal state shortcuts.
+  (evil-define-key 'normal evil-org-mode-map
+    "gh" 'outline-up-heading
+    "gj" 'org-forward-heading-same-level
+    "gk" 'org-backward-heading-same-level
+    "gl" 'outline-next-visible-heading
+    "H" 'org-beginning-of-line
+    "L" 'org-end-of-line
+    "t" 'org-todo
+    "$" 'org-end-of-line
+    "^" 'org-beginning-of-line
+    "-" 'org-ctrl-c-minus
+    ",r" 'org-refile
+    ",." 'org-ctrl-c-ctrl-c
+    ",*" 'org-toggle-heading
+    (kbd ",ar") 'org-archive-subtree
+    (kbd ",na") 'org-narrow-to-element
+    (kbd ",nw") 'widen
+    (kbd ",s") 'org-schedule
+    (kbd ",d") 'org-deadline
+    (kbd ",/") 'org-sparse-tree
+    (kbd "RET") 'org-return
+    (kbd ",cs") 'org-screenshot
+    (kbd ",ci") 'org-clock-in
+    (kbd ",co") 'org-clock-out
+    (kbd ",cc") 'org-edit-special
+    )
+
+  ;; normal & insert state shortcuts.
+  (mapcar (lambda (state)
+            (evil-define-key state evil-org-mode-map
+          (kbd "TAB") 'org-cycle
+              (kbd "M-l") 'org-metaright
+              (kbd "M-h") 'org-metaleft
+              (kbd "M-k") 'org-metaup
+              (kbd "M-j") 'org-metadown
+              (kbd "M-L") 'org-shiftmetaright
+              (kbd "M-H") 'org-shiftmetaleft
+              (kbd "M-K") 'org-shiftmetaup
+              (kbd "C-<return>") 'org-insert-heading
+              (kbd "C-S-<return>") 'org-insert-todo-heading
+              (kbd "M-J") 'org-shiftmetadown)) '(normal insert))
+
+
+  (define-minor-mode evil-org-capture-mode
+    "Buffer local minor mode for evil-org-capture"
+    :init-value nil
+    :lighter " EvilOrgCapture"
+    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+    :group 'evil-org)
+
+  (add-hook 'org-capture-mode-hook 'evil-org-capture-mode) ;; only load with org-capture-mode
+
+  ;; regular normal state shortcuts.
+  (evil-define-key 'normal evil-org-capture-mode-map
+    (kbd ",cf") 'org-capture-finalize
+    (kbd ",ck") 'org-capture-kill
+    (kbd ",cr") 'org-capture-refile)
+
+  (setq org-edit-src-auto-save-idle-delay 1)
+
+  (define-minor-mode evil-org-src-mode
+    "Buffer local minor mode for evil-org-src"
+    :init-value nil
+    :lighter " EvilOrgSrc"
+    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+    :group 'evil-org)
+
+  (add-hook 'org-capture-mode-hook 'evil-org-src-mode) ;; only load with org-capture-mode
+
+  ;; regular normal state shortcuts.
+  (evil-define-key 'normal evil-org-src-mode-map
+    (kbd ",cf") 'org-edit-src-exit
+    (kbd ",ck") 'org-edit-src-abort)
+#+end_src
+
+
 * Todo
 - How to handle =org-mode= format like ===?
