@@ -22,6 +22,7 @@ which is also *implemented using* Org-mode and [[http://git-scm.com/][git]].
 #+CAPTION: El-get packages for ome-org module
 |            | Status      | Description                               |
 |------------+-------------+-------------------------------------------|
+| [[http://gitorious.org/evil][evil]]       | Required    | Finally, the Emacs OS get a good editor.      |
 | [[http://orgmode.org/][org-mode]]   | Required    | One of the killer Apps on Emacs platform. |
 | [[http://www.emacswiki.org/emacs/Htmlize][htmlize]].el | Recommended | Export an buffer to html format.          |
 | [[http://staff.science.uva.nl/~dominik/Tools/cdlatex/][CDLaTeX]]    | Recommended | Speedy \LaTeX{} input.                    |
