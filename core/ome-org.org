@@ -87,7 +87,7 @@ to =$HOME/.emacs.d/init.el=:
               (local-set-key (kbd "M-C-y") 'org-table-paste-rectangle)
               (local-set-key (kbd "M-C-l") 'org-table-sort-lines)
               ;; display images
-              (local-set-key (kbd "M-I") 'org-toggle-iimage-in-org)))
+              (local-set-key (kbd "M-I") 'org-toggle-inline-images)))
 #+END_SRC
 
 * Speed keys
