@@ -120,16 +120,24 @@ one below.  The customize interface of `=org-babel-load-languages='
 contains an up to date list of the currently supported languages.
 
 #+NAME: babel
-#+BEGIN_SRC emacs-lisp :tangle no
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (sh . t)))
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (gnuplot . t)
+   (java . t)
+   (latex . t)
+   (ledger . t)
+   (python . t)
+   (ruby . t)
+   (sh . t)
+   (sql . nil)
+   (sqlite . t)))
 #+END_SRC
 
 You are encouraged to add the following to your personal configuration
 although it is not added by default as a security precaution.
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (setq org-confirm-babel-evaluate nil)
 #+END_SRC
 
