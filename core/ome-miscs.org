@@ -212,6 +212,11 @@ Blog]] for technical details.
 
 #+NAME: magit
 #+BEGIN_SRC emacs-lisp
+  (defun ome-magit-setup ()
+    (define-key evil-normal-state-map (kbd ",gh") 'magit-file-log) ; Commit history for current file
+    (define-key evil-normal-state-map (kbd ",gb") 'magit-blame-mode) ; Blame for current file
+    (define-key evil-normal-state-map (kbd ",gs") 'magit-status))
+
   (if (executable-find "git")
       (ome-install 'magit))
 #+END_SRC
