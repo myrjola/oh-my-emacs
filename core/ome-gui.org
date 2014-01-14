@@ -30,7 +30,7 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
     (global-hl-line-mode t)
 
     ;; if in gui-mode
-    (if window-system
+    (when (display-graphic-p)
       ;; make the fringe thinner (default is 8 in pixels)
       (fringe-mode 4))
 
@@ -39,7 +39,6 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
     (setq show-paren-style 'expression)
 
 #+END_SRC
-
 * Choose Monaco as the Default English Font
   :PROPERTIES:
   :CUSTOM_ID: font
