@@ -454,7 +454,7 @@ math]]" for details.
     :keymap (make-sparse-keymap) ; defines evil-org-mode-map
     :group 'evil-org)
 
-  (add-hook 'org-capture-mode-hook 'evil-org-src-mode) ;; only load with org-capture-mode
+  (add-hook 'org-src-mode-hook 'evil-org-src-mode) ;; only load with org-capture-mode
 
   ;; regular normal state shortcuts.
   (evil-define-key 'normal evil-org-src-mode-map
