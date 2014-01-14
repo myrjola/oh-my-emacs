@@ -227,11 +227,9 @@ By default, =<Leader>= is =<SPC>=, so you can use =<SPC> c= to activate
 #+NAME: ace-jump-mode
 #+BEGIN_SRC emacs-lisp
   (defun ome-ace-jump-mode-setup ()
-    (when (and (featurep 'evil) (featurep 'evil-leader))
-      (evil-leader/set-key
-        "ac" 'ace-jump-char-mode
-        "w" 'ace-jump-word-mode
-        "l" 'ace-jump-line-mode)))
+    (when (featurep 'evil)
+      (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
+      (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-char-mode)))
 
   (ome-install 'ace-jump-mode)
 #+END_SRC
