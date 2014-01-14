@@ -75,14 +75,14 @@ Emacs session.
 
 #+NAME: evil
 #+BEGIN_SRC emacs-lisp
-    (defun ome-evil-setup ()
-      (setq evil-auto-indent t)
-      (setq evil-regexp-search t)
-      (setq evil-want-C-i-jump t)
-      (add-hook 'text-mode-hook 'turn-on-evil-mode)
-      (add-hook 'prog-mode-hook 'turn-on-evil-mode)
-      (add-hook 'comint-mode-hook 'turn-on-evil-mode)
-      (add-hook 'Info-mode-hook 'turn-off-evil-mode)
+  (defun ome-evil-setup ()
+    (setq evil-auto-indent t)
+    (setq evil-regexp-search t)
+    (setq evil-want-C-i-jump t)
+    (add-hook 'text-mode-hook 'turn-on-evil-mode)
+    (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+    (add-hook 'comint-mode-hook 'turn-on-evil-mode)
+    (add-hook 'Info-mode-hook 'turn-off-evil-mode)
 
     (if (display-graphic-p)
         ()
@@ -90,17 +90,39 @@ Emacs session.
       (define-key evil-insert-state-map (kbd "ESC") #'evil-force-normal-state)
       (define-key evil-insert-state-map [escape] 'evil-normal-state))
 
-      ;;; esc quits
-  (define-key evil-normal-state-map [escape] 'keyboard-quit)
-  (define-key evil-visual-state-map [escape] 'keyboard-quit)
-  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
+    ;; Don't wait for any other keys after escape is pressed.
+    (setq evil-esc-delay 0)
 
+    ;; Make sure escape gets back to normal state and quits things.
+    (define-key evil-insert-state-map [escape] 'evil-normal-state)
+    (define-key evil-visual-state-map [escape] 'evil-normal-state)
+    (define-key evil-emacs-state-map [escape] 'evil-normal-state)
+    (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+    (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+    (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+    (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+    (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+    (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
+    (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
+    (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
+    (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
+    (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
-    (ome-install 'evil)
+    ;; Calc dispatch
+    (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
+
+    ;; Indent region in visual-mode with tab
+    (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
+
+  (ome-install 'evil)
+
+  (defun ome-evil-nerd-commenter-setup ()
+    (define-key evil-normal-state-map (kbd ",cp") 'evilnc-comment-or-uncomment-paragraphs)
+    ;; Comment or uncomment the current line or marked region
+    (define-key evil-normal-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-lines)
+    (define-key evil-visual-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-region))
+
+  (ome-install 'evil-nerd-commenter)
 #+END_SRC
 
 * Evil-leader
