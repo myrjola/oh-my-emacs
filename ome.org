@@ -113,6 +113,13 @@ Wow, what a long journey, if you're tired, you can [[http://emacsrocks.com/][roc
 3. Move the resulting directory to =~/.emacs.d= [1]
 4. Launch Emacs!
 
+** Settings from M-x customize
+#+NAME: m-x-customize-customizations
+#+BEGIN_SRC emacs-lisp
+  (setq custom-file (concat ome-dir "custom.el"))
+  (load custom-file 'noerror)
+#+END_SRC
+
 
 ** Package Management
 #+BEGIN_QUOTE
@@ -482,13 +489,6 @@ After we've loaded all the oh-my-emacs defaults, lets load the User's stuff.
                (mapcar #'remove-extension
                        (directory-files user-dir t ".*\.\\(org\\|el\\)\\(\\.gpg\\)?$"))
                :test #'string=)))))
-#+END_SRC
-
-*** Settings from M-x customize
-#+NAME: m-x-customize-customizations
-#+BEGIN_SRC emacs-lisp
-  (setq custom-file (concat ome-dir "custom.el"))
-  (load custom-file 'noerror)
 #+END_SRC
 
 * Todo
