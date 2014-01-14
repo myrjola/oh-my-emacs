@@ -19,24 +19,25 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
 * Basic GUI Settings
 #+NAME: gui-basics
 #+BEGIN_SRC emacs-lisp
-  ;; show column number and line number
-  (dolist (mode '(column-number-mode line-number-mode))
-    (when (fboundp mode) (funcall mode t)))
+    ;; show column number and line number
+    (dolist (mode '(column-number-mode line-number-mode))
+      (when (fboundp mode) (funcall mode t)))
 
-  (dolist (mode-hook '(text-mode-hook prog-mode-hook))
-    (add-hook mode-hook
-              (lambda ()
-                (linum-mode 1))))
+    ;; Toggle line highlighting in all buffers
+    (global-linum-mode t)
 
-  ;; make the fringe thinner (default is 8 in pixels)
-  (fringe-mode 4)
+    ;; Toggle line highlighting in all buffers
+    (global-hl-line-mode t)
 
-  ;; show parenthesis match
-  (show-paren-mode 1)
-  (setq show-paren-style 'expression)
+    ;; if in gui-mode
+    (if window-system
+      ;; make the fringe thinner (default is 8 in pixels)
+      (fringe-mode 4))
 
-  ;; Toggle line highlighting in all buffers
-  (global-hl-line-mode t)
+    ;; show parenthesis match
+    (show-paren-mode 1)
+    (setq show-paren-style 'expression)
+
 #+END_SRC
 
 * Choose Monaco as the Default English Font
