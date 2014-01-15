@@ -158,6 +158,33 @@ keybindings for =outline-minor-mode=.
 
 #+END_SRC
 
+* Edit server
+
+This is used by edit with emacs chrome extension
+
+#+begin_src emacs-lisp
+  (defun ome-edit-server-setup ()
+    (require 'edit-server)
+    (setq edit-server-new-frame nil)
+    (edit-server-start))
+
+  (ome-install 'edit-server)
+#+end_src
+
+* Ledger mode
+
+I use ledger for accounting. It easy to convert my
+bank-statement with ledger's plain text format.
+
+#+begin_src emacs-lisp
+  (defun ome-ledger-mode-setup ()
+    (add-hook 'ledger-mode-hook
+              (lambda ()
+                (local-set-key (kbd "TAB") 'ledger-magic-tab))))
+
+  (ome-install 'ledger-mode)
+#+end_src
+
 * Po-mode
   :PROPERTIES:
   :CUSTOM_ID: po-mode
