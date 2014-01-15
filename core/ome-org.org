@@ -260,109 +260,119 @@ math]]" for details.
 * Agenda configuration
 
   #+begin_src emacs-lisp
-    (require 'org-protocol)
-    (require 'org-agenda)
-    (require 'org-habit)
+        (require 'org-protocol)
+        (require 'org-agenda)
+        (require 'org-habit)
 
-    ; Shortcut to gtd-file
-    (defun gtd ()
-       (interactive)
-       (find-file "~/org/gtd.org")
-    )
+        ; Shortcut to gtd-file
+        (defun gtd ()
+           (interactive)
+           (find-file "~/org/gtd.org")
+        )
 
-    ; Bulk archive done in subtree
-    (defun my-org-archive-done-tasks ()
-      (interactive)
-      (org-map-entries 'org-archive-subtree "/DONE" 'file))
-
-
-    (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-    (setq org-mobile-files
-          (list "~/org/gtd.org" "~/org/notes.org" "~/org/captures.org" "~/org/journal.org"))
-
-    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-
-    (setq org-agenda-files org-mobile-files)
-
-    ; I prefer return to activate a link
-    (setq org-return-follows-link t)
-
-    ;;; org agenda -- leave in emacs mode but add j & k
-    (define-key org-agenda-mode-map "j" 'evil-next-line)
-    (define-key org-agenda-mode-map "k" 'evil-previous-line)
-    (define-key org-agenda-mode-map "s" 'org-agenda-schedule)
-    (define-key org-agenda-mode-map "d" 'org-agenda-deadline)
-
-    (setq org-default-notes-file (concat org-directory "/captures.org"))
-
-    (define-key evil-normal-state-map (kbd ",ag") 'org-agenda)
-    (define-key evil-normal-state-map (kbd ",cj") 'org-clock-goto)
-    (define-key evil-normal-state-map (kbd ",mi") 'org-mobile-pull)
-    (define-key evil-normal-state-map (kbd ",me") 'org-mobile-push)
-
-    (setq org-capture-templates
-          (quote
-           (("w"
-             "Default template"
-             entry
-             (file+headline "~/org/captures.org" "Notes")
-             "* %c\n%u\n %i"
-             :empty-lines 1)
-          ("l" "ticket todo" entry (file+olp "~/org/gtd.org" "RELEX" "Tasks")
-                 "* TODO %c\n%U\n%i" :clock-in t :clock-resume t)
-          ("r" "RELEX todo" entry (file+olp "~/org/gtd.org" "RELEX" "Tasks")
-                 "* TODO %?\n%U" :clock-in t :clock-resume t)
-          ("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
-                 "* TODO %?\n%i")
-          ("c" "Capture" entry (file "~/org/captures.org")
-                 "* %?\nEntered on %U\n%i")
-          ("h" "Habit" entry (file+headline "~/org/gtd.org" "Habits")
-                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-          ("j" "Journal" entry (file+datetree "~/org/journal.org")
-                 "* %?\nEntered on %U\n  %i"))))
-
-    ; position the habit graph on the agenda to the right of the default
-    (setq org-habit-graph-column 50)
-    (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
+        ; Bulk archive done in subtree
+        (defun my-org-archive-done-tasks ()
+          (interactive)
+          (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
 
-    ;; Compact the block agenda view
-    (setq org-agenda-compact-blocks t)
+        (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+        (setq org-mobile-files
+              (list "~/org/gtd.org" "~/org/notes.org" "~/org/captures.org" "~/org/journal.org"))
 
-    (setq org-todo-keywords
-          (quote ((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)"))))
+        (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-    ;; Keep tasks with timestamps on the global todo lists
-    (setq org-agenda-todo-ignore-timestamp nil)
+        (setq org-agenda-files org-mobile-files)
 
-    ;; Remove completed deadline tasks from the agenda view
-    (setq org-agenda-skip-deadline-if-done t)
+        ; I prefer return to activate a link
+        (setq org-return-follows-link t)
 
-    ;; Remove completed scheduled tasks from the agenda view
-    (setq org-agenda-skip-scheduled-if-done t)
+        ;;; org agenda -- leave in emacs mode but add j & k
+        (define-key org-agenda-mode-map "j" 'evil-next-line)
+        (define-key org-agenda-mode-map "k" 'evil-previous-line)
+        (define-key org-agenda-mode-map "s" 'org-agenda-schedule)
+        (define-key org-agenda-mode-map "d" 'org-agenda-deadline)
 
-    ;; Automatic mobileorg syncing
-    (defvar org-mobile-sync-timer nil)
-    (defvar org-mobile-sync-idle-secs (* 60 10))
-    (defun org-mobile-sync ()
-      (interactive)
-      (org-mobile-pull)
-      (org-mobile-push))
+        (setq org-default-notes-file (concat org-directory "/captures.org"))
 
-    (defun org-mobile-sync-enable ()
-      "enable mobile org idle sync"
-      (interactive)
-      (setq org-mobile-sync-timer
-            (run-with-idle-timer org-mobile-sync-idle-secs t
-                                 'org-mobile-sync)));
+        (define-key evil-normal-state-map (kbd ",ag") 'org-agenda)
+        (define-key evil-normal-state-map (kbd ",cj") 'org-clock-goto)
+        (define-key evil-normal-state-map (kbd ",mi") 'org-mobile-pull)
+        (define-key evil-normal-state-map (kbd ",me") 'org-mobile-push)
 
-    (defun org-mobile-sync-disable ()
-      "disable mobile org idle sync"
-      (interactive)
-      (cancel-timer org-mobile-sync-timer))
-    (org-mobile-sync-enable)
+    (setq org-agenda-custom-commands
+          '(("r" "Relex agenda"
+             ;; agenda for today
+             ((agenda "" ((org-agenda-ndays 1)))
+              ;; scheduled todos
+              (tags-todo "CATEGORY=\"Relex\""
+                         ((org-agenda-skip-function '(org-agenda-skip-subtree-if
+                                                      'deadline 'scheduled)))
+                         (org-agenda-overriding-header "Unscheduled Relex TODOs"))))))
 
-    (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+        (setq org-capture-templates
+              (quote
+               (("w"
+                 "Default template"
+                 entry
+                 (file+headline "~/org/captures.org" "Notes")
+                 "* %c\n%u\n %i"
+                 :empty-lines 1)
+              ("l" "ticket todo" entry (file+olp "~/org/gtd.org" "RELEX" "Misc tasks")
+                     "* TODO %c\n%U\n%i" :clock-in t :clock-resume t)
+              ("r" "RELEX todo" entry (file+olp "~/org/gtd.org" "RELEX" "Misc tasks")
+                     "* TODO %?\n%U" :clock-in t :clock-resume t)
+              ("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+                     "* TODO %?\n%i")
+              ("c" "Capture" entry (file "~/org/captures.org")
+                     "* %?\nEntered on %U\n%i")
+              ("h" "Habit" entry (file+headline "~/org/gtd.org" "Habits")
+                     "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+              ("j" "Journal" entry (file+datetree "~/org/journal.org")
+                     "* %?\nEntered on %U\n  %i"))))
+
+        ; position the habit graph on the agenda to the right of the default
+        (setq org-habit-graph-column 50)
+        (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
+
+
+        ;; Compact the block agenda view
+        (setq org-agenda-compact-blocks t)
+
+        (setq org-todo-keywords
+              (quote ((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)"))))
+
+        ;; Keep tasks with timestamps on the global todo lists
+        (setq org-agenda-todo-ignore-timestamp nil)
+
+        ;; Remove completed deadline tasks from the agenda view
+        (setq org-agenda-skip-deadline-if-done t)
+
+        ;; Remove completed scheduled tasks from the agenda view
+        (setq org-agenda-skip-scheduled-if-done t)
+
+        ;; Automatic mobileorg syncing
+        (defvar org-mobile-sync-timer nil)
+        (defvar org-mobile-sync-idle-secs (* 60 10))
+        (defun org-mobile-sync ()
+          (interactive)
+          (org-mobile-pull)
+          (org-mobile-push))
+
+        (defun org-mobile-sync-enable ()
+          "enable mobile org idle sync"
+          (interactive)
+          (setq org-mobile-sync-timer
+                (run-with-idle-timer org-mobile-sync-idle-secs t
+                                     'org-mobile-sync)));
+
+        (defun org-mobile-sync-disable ()
+          "disable mobile org idle sync"
+          (interactive)
+          (cancel-timer org-mobile-sync-timer))
+        (org-mobile-sync-enable)
+
+        (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
   #+end_src
 
