@@ -37,7 +37,7 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
     (fringe-mode 4))
 
   ;; Enable xterm mouse reporting from the terminal
-  (unless (display-graphi-p)
+  (unless (display-graphic-p)
     (xterm-mouse-mode t)
     (global-set-key [mouse-4] '(lambda ()
                                  (interactive)
