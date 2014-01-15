@@ -472,6 +472,24 @@ math]]" for details.
     (kbd ",ck") 'org-edit-src-abort)
 #+end_src
 
+* Misc defuns
+
+#+begin_src emacs-lisp
+
+  (defun org-screenshot ()
+      "Take a screenshot into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file. Also copy filename to clipboard"
+      (interactive)
+      (setq filename (concat (make-temp-name (concat "/home/martin/org/screenshots/" (format-time-string "%Y%m%d_%H%M%S_")) ) ".jpg"))
+      (call-process "import" nil nil nil filename)
+      (insert (concat "[[" filename "]]"))
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (org-redisplay-inline-images))
+
+#+end_src
+
+
 
 * Todo
 - How to handle =org-mode= format like ===?
