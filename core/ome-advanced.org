@@ -84,9 +84,8 @@ Emacs session.
      (add-hook 'comint-mode-hook 'turn-on-evil-mode)
      (add-hook 'Info-mode-hook 'turn-off-evil-mode)
 
-     (if (display-graphic-p)
-         ()
-       ;; if in terminal mode
+     ;; if in terminal mode
+     (unless (display-graphic-p)
        (define-key evil-insert-state-map (kbd "ESC") #'evil-force-normal-state)
        (define-key evil-insert-state-map [escape] 'evil-normal-state))
 

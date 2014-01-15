@@ -36,6 +36,17 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
     ;; make the fringe thinner (default is 8 in pixels)
     (fringe-mode 4))
 
+  ;; Enable xterm mouse reporting from the terminal
+  (unless (display-graphi-p)
+    (xterm-mouse-mode t)
+    (global-set-key [mouse-4] '(lambda ()
+                                 (interactive)
+                                 (scroll-down 1)))
+    (global-set-key [mouse-5] '(lambda ()
+                                 (interactive)
+                                 (scroll-up 1))))
+
+
   ;; show parenthesis match
   (show-paren-mode 1)
   (setq show-paren-style 'expression)
