@@ -275,6 +275,9 @@ math]]" for details.
           (interactive)
           (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
+        ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
+        (setq org-refile-targets (quote ((nil :maxlevel . 5)
+          (org-agenda-files :maxlevel . 5))))
 
         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
         (setq org-mobile-files
