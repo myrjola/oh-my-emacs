@@ -69,6 +69,11 @@ way to solve this.
                       js3-square-indent-offset 4)
                 (linum-mode 1)))
 
+    (defadvice js3-enter-key (after fix-sp-state activate)
+      (setq sp-last-operation 'sp-self-insert))
+
+    (add-to-list 'ac-modes 'js3-mode))
+
               ;; https://github.com/Fuco1/smartparens/issues/239
               ;; (defadvice js3-enter-key (after fix-sp-state activate)
               ;;   (setq sp-last-operation 'sp-self-insert))
@@ -78,7 +83,6 @@ way to solve this.
               ;;                nil
               ;;                :post-handlers
               ;;                '((ome-create-newline-and-enter-sexp js3-enter-key))))
-    (add-to-list 'ac-modes 'js3-mode))
 
   (ome-install 'js3-mode)
 #+END_SRC
@@ -131,7 +135,6 @@ auto-complete for JavaScript programming in Emacs.
       '(progn
          (require 'tern-auto-complete)
          (tern-ac-setup))))
-
   (ome-install 'tern)
 #+END_SRC
 
@@ -269,6 +272,36 @@ is not born when js-comint was first released.
 
   (ome-install 'js-comint)
 #+END_SRC
+
+* javascript-defuns
+
+#+begin_src emacs-lisp
+  (defun node-js-eval-region-or-buffer ()
+    "Evaluate the current buffer (or region if mark-active),
+     and return the result into another buffer,
+     which is to be shown in a window."
+    (interactive)
+    (let ((debug-on-error t) (start 1) (end 1) (nodejsbuffer "***node.js***"))
+      (cond
+       (mark-active
+        (setq start (point))
+        (setq end (mark)))
+       (t
+        (setq start (point-min))
+        (setq end (point-max))))
+      (call-process-region
+       start end     ; seems the order does not matter
+       "node"        ; node.js
+       nil           ; don't delete region
+       nodejsbuffer  ; output buffer
+       nil)          ; no redisply during output
+      (message "Region or buffer evaluated!")
+      (setq deactivate-mark t)
+      (display-buffer nodejsbuffer))) ; deactive the region, regardless
+
+  (define-key global-map (kbd "C-c v") 'node-js-eval-region-or-buffer)
+
+#+end_src
 
 * Skewer-mode
   :PROPERTIES:
