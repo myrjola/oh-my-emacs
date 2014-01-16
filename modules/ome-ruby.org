@@ -111,6 +111,34 @@ amazing, elegant package.
     (require 'smartparens-ruby))
 #+END_SRC
 
+* Misc defuns
+
+#+begin_src emacs-lisp
+
+    (defun deploy-customer-config(server instance)
+      "Deploy customer-config to server"
+      (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
+      (let (
+        (remotepath (concat "/" server ":/opt/apps/" instance "/current/WEB-INF/customer/" (file-name-nondirectory(buffer-file-name))))
+        (currentfile buffer-file-name))
+        (save-restriction
+          (widen)
+          (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
+
+        (find-file currentfile)))
+
+    (eval-after-load "evil"
+      '(lambda ()
+         (define-minor-mode -mode
+           "NERDTree bindings for Dired."
+           :keymap (make-sparse-keymap)
+           (evil-normalize-keymaps))
+
+         (define-key evil-normal-state-map (kbd ",d") 'deploy-customer-config)))
+
+#+end_src
+
+
 * Todo
 - Auto-complete support, maybe [[https://github.com/dgutov/robe][robe]] is a good choice.
 - Ah, rails support, lots of works, so, as it always said, any help will be
