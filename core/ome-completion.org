@@ -234,6 +234,7 @@ fallback. But I do suggest you to take some time to be familiar with helm.
     (global-set-key (kbd "C-x C-f") 'helm-find-files))
 
   (ome-install 'helm)
+  (ome-install 'helm-ls-git)
 
 #+END_SRC
 * Yasnippet
