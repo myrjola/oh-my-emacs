@@ -110,6 +110,11 @@ Emacs session.
      ;; Calc dispatch
      (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
 
+     ;; More helm mappings
+     (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
+     (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
+     (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
+
      ;; Indent region in visual-mode with tab
      (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
 
