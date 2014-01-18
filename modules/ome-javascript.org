@@ -249,7 +249,7 @@ javascript repl in Emacs, it is an alternative to [[https://github.com/abicky/no
 is not born when js-comint was first released.
 
 #+NAME: js-comint
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (defun ome-js-comint-setup ()
     (setq inferior-js-program-command "node")
     (add-hook 'js3-mode-hook
@@ -275,7 +275,9 @@ is not born when js-comint was first released.
 
 * javascript-defuns
 
-#+begin_src emacs-lisp
+Not needed because of js-comint.
+
+#+begin_src emacs-lisp :tangle no
   (defun node-js-eval-region-or-buffer ()
     "Evaluate the current buffer (or region if mark-active),
      and return the result into another buffer,
