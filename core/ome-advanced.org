@@ -115,6 +115,9 @@ Emacs session.
      (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
      (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
 
+     ;; Undo-Tree
+     (define-key evil-normal-state-map (kbd ",u") 'undo-tree-visualize)
+
      ;; Indent region in visual-mode with tab
      (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
 
