@@ -273,6 +273,32 @@ is not born when js-comint was first released.
   (ome-install 'js-comint)
 #+END_SRC
 
+* Evil keybindings
+
+#+begin_src emacs-lisp
+  (define-minor-mode evil-js-mode
+    "Buffer local minor mode for evil-js"
+    :init-value nil
+    :lighter " EvilJS"
+    :keymap (make-sparse-keymap) ; defines evil-js-mode-map
+    :group 'evil-js)
+
+  (add-hook 'js3-mode-hook 'evil-js-mode) ;; only load with org-mode
+
+  ;; regular normal state shortcuts.
+  (evil-define-key 'normal evil-js-mode-map
+    ",tf" 'tern-find-definition
+    ",tt" 'tern-get-type
+    ",td" 'tern-get-docs
+    ",tr" 'tern-rename-variable
+    ",sr" 'js-send-region
+    ",sR" 'js-send-region-and-go
+    ",sb" 'js-send-buffer
+    ",sB" 'js-send-buffer-and-go
+    ",se" 'js-send-last-sexp
+    ",sE" 'js-send-last-sexp-and-go)
+#+end_src
+
 * javascript-defuns
 
 Not needed because of js-comint.
