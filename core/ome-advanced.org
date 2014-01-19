@@ -114,6 +114,7 @@ Emacs session.
      (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
      (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
      (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
+     (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
 
      ;; Undo-Tree
      (define-key evil-normal-state-map (kbd ",u") 'undo-tree-visualize)

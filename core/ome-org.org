@@ -122,18 +122,24 @@ contains an up to date list of the currently supported languages.
 
 #+NAME: babel
 #+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (gnuplot . t)
-   (java . t)
-   (latex . t)
-   (ledger . t)
-   (python . t)
-   (ruby . t)
-   (sh . t)
-   (sql . nil)
-   (sqlite . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (gnuplot . t)
+     (java . t)
+     (latex . t)
+     (ledger . t)
+     (python . t)
+     (ruby . t)
+     (sh . t)
+     (ditaa . t)
+     (plantuml . t)
+     (sql . t)
+     (sqlite . t)))
+
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
+  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
 #+END_SRC
 
 You are encouraged to add the following to your personal configuration

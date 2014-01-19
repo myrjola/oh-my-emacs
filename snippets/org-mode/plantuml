@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: plantuml diagram
+# key: dia
+# --
+#+begin_src plantuml :file data/plantuml`(helm-basename (buffer-file-name))`_`(point)`.png
+(${1:header1}) -> (${2:header2})
+$0
+#+end_src
