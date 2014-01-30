@@ -119,8 +119,8 @@ amazing, elegant package.
     "Deploy customer-config to server"
     (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
     (let (
-      (remotepath (concat "/" server ":/opt/apps/" instance "/current/WEB-INF/customer/" (file-name-nondirectory(buffer-file-name))))
-      (currentfile buffer-file-name))
+          (remotepath (concat "/" server ":/opt/apps/" instance "/current/WEB-INF/customer/" (file-name-nondirectory(buffer-file-name))))
+          (currentfile buffer-file-name))
       (save-restriction
         (widen)
         (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
@@ -134,7 +134,9 @@ amazing, elegant package.
          :keymap (make-sparse-keymap)
          (evil-normalize-keymaps))
 
-       (evil-define-key 'normal evil-ruby-mode-map (kbd ",d") 'deploy-customer-config)))
+       (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
+         'deploy-customer-config)
+       (add-hook 'ruby-mode-hook 'evil-ruby-mode)))
 
 #+end_src
 
