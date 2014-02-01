@@ -197,7 +197,7 @@ I just gave up. Since for any questions in =po-mode=, you can just type =?= or
 =h=, and you will get a brief and concise answer.
 
 #+NAME: po-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun ome-po-mode-setup ()
     (add-hook 'po-mode-hook
               (lambda ()
@@ -337,6 +337,7 @@ just enjoy it!
   :CUSTOM_ID: smartparens
   :END:
 
+
 #+BEGIN_QUOTE
 Smartparens is modern minor mode for Emacs that /deals with parens pairs and
 tries to be smart about it/. It is a unification and enhancement effort to
@@ -387,6 +388,7 @@ some time to master these wonderful commands, which will make your life easier.
     ;; global
     (require 'smartparens-config)
     (setq sp-autoskip-closing-pair 'always)
+    (setq sp-autoescape-string-quote t)
     (setq sp-navigate-close-if-unbalanced t)
     (smartparens-global-mode t)
 
@@ -441,7 +443,6 @@ some time to master these wonderful commands, which will make your life easier.
     (define-key sp-keymap (kbd "M-s M-j") 'sp-join-sexp)
     (define-key sp-keymap (kbd "M-s M-s") 'sp-split-sexp)
     (define-key sp-keymap (kbd "M-s M-r") 'sp-raise-sexp)
-
     ;; pair management
     (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
 
@@ -472,7 +473,6 @@ some time to master these wonderful commands, which will make your life easier.
                      '((ome-create-newline-and-enter-sexp "RET")))))
 
   (ome-install 'smartparens)
-
 #+END_SRC
 
 * Emacs-w3m
