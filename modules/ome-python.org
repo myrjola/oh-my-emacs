@@ -138,8 +138,23 @@ elpy.
     (define-key python-mode-map (kbd "RET")
       'newline-and-indent))
 
+  (ome-install 'pyvenv)
   (ome-install 'elpy)
 #+END_SRC
+
+* Django
+
+#+begin_src emacs-lisp
+  (defun ome-python-django-setup ()
+    (require 'python-django)
+    (define-key evil-normal-state-map (kbd ",j") 'python-django-open-project)
+    (add-to-list 'auto-mode-alist '("\\.djhtml$" . django-html-mode)))
+
+  (ome-install 'python-django)
+
+
+#+end_src
+
 
 * Todo
 - Add some django-mode support? Maybe
