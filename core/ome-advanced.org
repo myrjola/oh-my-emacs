@@ -84,7 +84,18 @@ Emacs session.
     (add-hook 'comint-mode-hook 'turn-on-evil-mode)
     (add-hook 'Info-mode-hook 'turn-off-evil-mode)
 
-    (global-set-key (kbd "C-w C-w") 'lacarte-execute-command)
+    ;; Take vim's window management features
+    (global-unset-key (kbd "C-w"))
+    (global-set-key (kbd "C-w C-w") 'evil-window-prev)
+    (global-set-key (kbd "C-w C-j") 'evil-window-down)
+    (global-set-key (kbd "C-w C-k") 'evil-window-up)
+    (global-set-key (kbd "C-w C-h") 'evil-window-left)
+    (global-set-key (kbd "C-w C-l") 'evil-window-right)
+    (global-set-key (kbd "C-w w") 'evil-window-prev)
+    (global-set-key (kbd "C-w j") 'evil-window-down)
+    (global-set-key (kbd "C-w k") 'evil-window-up)
+    (global-set-key (kbd "C-w h") 'evil-window-left)
+    (global-set-key (kbd "C-w l") 'evil-window-right)
 
     ;; if in terminal mode
     (unless (display-graphic-p)
