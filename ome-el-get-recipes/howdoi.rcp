@@ -1,0 +1,5 @@
+(:name howdoi
+       :type git
+       :url "git://github.com/atykhonov/emacs-howdoi.git"
+       :features howdoi
+       )

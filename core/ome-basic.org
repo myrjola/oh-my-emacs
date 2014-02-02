@@ -45,6 +45,16 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
   (when (eq system-type 'darwin)
     (when window-system (ome-set-exec-path-from-shell-PATH)))
 
+  ;; set backup-directory
+  (setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
+        backup-by-copying t
+        version-control t
+        kept-old-versions 2
+        kept-new-versions 20
+        delete-old-versions t)
+  (setq tramp-backup-directory-alist backup-directory-alist)
+  (setq auto-save-file-name-transforms nil)
+
   ;; set environment coding system
   (set-language-environment "UTF-8")
   ;; auto revert buffer globally

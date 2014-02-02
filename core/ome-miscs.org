@@ -652,6 +652,13 @@ like.
   (ome-install 'diminish)
 #+END_SRC
 
+* Howdoi
+#+begin_src emacs-lisp
+  (defun ome-howdoi-setup ()
+    (require 'howdoi))
+  (ome-install 'howdoi)
+#+end_src
+
 * Todo
 - Enable flyspell and ispell in text-mode.
 - Add a dictionary support, such as =sdcv=? Or a better translator support such

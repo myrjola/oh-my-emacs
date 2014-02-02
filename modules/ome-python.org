@@ -148,7 +148,8 @@ elpy.
   (defun ome-python-django-setup ()
     (require 'python-django)
     (define-key evil-normal-state-map (kbd ",j") 'python-django-open-project)
-    (add-to-list 'auto-mode-alist '("\\.djhtml$" . django-html-mode)))
+    (setq python-django-ui-allowed-extensions (add-to-list
+                                               'python-django-ui-allowed-extensions "djhtml")))
 
   (ome-install 'python-django)
 
