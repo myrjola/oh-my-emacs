@@ -127,16 +127,14 @@ amazing, elegant package.
 
       (find-file currentfile)))
 
-  (eval-after-load "evil"
-    '(lambda ()
-       (define-minor-mode evil-ruby-mode
-         "Evil ruby bindings"
-         :keymap (make-sparse-keymap)
-         (evil-normalize-keymaps))
+  (define-minor-mode evil-ruby-mode
+    "Evil ruby bindings"
+    :keymap (make-sparse-keymap)
+    (evil-normalize-keymaps))
 
-       (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
-         'deploy-customer-config)
-       (add-hook 'ruby-mode-hook 'evil-ruby-mode)))
+  (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
+    'deploy-customer-config)
+  (add-hook 'ruby-mode-hook 'evil-ruby-mode)
 
 #+end_src
 
