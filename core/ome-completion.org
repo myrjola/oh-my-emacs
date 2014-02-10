@@ -226,7 +226,8 @@ fallback. But I do suggest you to take some time to be familiar with helm.
 #+BEGIN_SRC emacs-lisp
   (defun ome-helm-setup ()
     (require 'helm-config)
-    (setq helm-input-idle-delay 0.2)
+    (setq helm-input-idle-delay 0.1)
+    (setq helm-m-occur-idle-delay 0.1)
     (helm-mode t)
     (global-set-key (kbd "C-x c g") 'helm-do-grep)
     (global-set-key (kbd "C-x c o") 'helm-occur)
