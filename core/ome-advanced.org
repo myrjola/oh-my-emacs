@@ -301,6 +301,9 @@ you'll get all you need. Enjoy it.
 #+BEGIN_SRC emacs-lisp
   (when (or (executable-find "ack") (executable-find "ack-grep"))
     (ome-install 'ack-and-a-half))
+
+  (when (executable-find "ag")
+    (ome-install 'ag))
 #+END_SRC
 
 * Todo
