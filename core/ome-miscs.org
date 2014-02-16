@@ -665,6 +665,13 @@ like.
   (ome-install 'howdoi)
 #+end_src
 
+* Semantic web support
+  This adds ttl-mode to edit TURTLE-files and sparql-mode for SPARQL queries
+#+begin_src emacs-lisp
+  (ome-install 'ttl-mode)
+  (ome-install 'sparql-mode)
+#+end_src
+
 * Todo
 - Enable flyspell and ispell in text-mode.
 - Add a dictionary support, such as =sdcv=? Or a better translator support such

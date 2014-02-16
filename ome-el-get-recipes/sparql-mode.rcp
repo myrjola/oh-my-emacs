@@ -1,0 +1,12 @@
+(:name sparql-mode
+  :type git
+  :website "https://github.com/ljos/sparql-mode"
+  :description "A major mode for emacs that provides syntax highlighting for SPARQL"
+  :url "https://github.com/ljos/sparql-mode.git"
+  :post-init (progn
+               (autoload 'sparql-mode "sparql-mode.el"
+                 "Major mode for editing SPARQL files" t)
+               (add-to-list 'auto-mode-alist '("\\.sparql$" . sparql-mode))
+               (add-to-list 'ac-dictionary-files "/path/to/sparql-mode-dir/sparql-mode")
+               (add-hook 'sparql-mode-hook 'auto-complete-mode)
+               ))
