@@ -76,9 +76,9 @@ self-adapting.
 #+BEGIN_SRC emacs-lisp
   ;; frame font
   ;; Setting English Font
-  (if (member "Monaco" (font-family-list))
+  (if (member "Source Code Pro" (font-family-list))
       (set-face-attribute
-       'default nil :font "Monaco 12"))
+       'default nil :font "Source Code Pro 10"))
 #+END_SRC
 
 * Full screen support
