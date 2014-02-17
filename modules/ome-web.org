@@ -114,3 +114,12 @@ web projects. The answer lies in the [[http://www.gnu.org/software/emacs/manual/
 
   (ome-install 'web-mode)
 #+END_SRC
+
+* impatient-mode
+This awesome mode makes live editing in a browser easy
+
+#+begin_src emacs-lisp
+  (defun ome-impatient-mode-setup ()
+
+  (ome-install 'impatient-mode)
+#+end_src

@@ -1,0 +1,5 @@
+(:name impatient-mode
+       :type git
+       :url "https://github.com/netguy204/imp.el.git"
+       :features impatient-mode
+       )
