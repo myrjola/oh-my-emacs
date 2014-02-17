@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: plantumlline
+# key: di
+# --
+(${1:header1}) -> (${2:header2})
+di$0
