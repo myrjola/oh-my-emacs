@@ -75,78 +75,81 @@ Emacs session.
 
 #+NAME: evil
 #+BEGIN_SRC emacs-lisp
-  (defun ome-evil-setup ()
-    (setq evil-auto-indent t)
-    (setq evil-regexp-search t)
-    (setq evil-want-C-i-jump t)
-    (add-hook 'text-mode-hook 'turn-on-evil-mode)
-    (add-hook 'prog-mode-hook 'turn-on-evil-mode)
-    (add-hook 'comint-mode-hook 'turn-on-evil-mode)
-    (add-hook 'Info-mode-hook 'turn-off-evil-mode)
+    (defun ome-evil-setup ()
+      (setq evil-auto-indent t)
+      (setq evil-regexp-search t)
+      (setq evil-want-C-i-jump t)
+      (add-hook 'text-mode-hook 'turn-on-evil-mode)
+      (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+      (add-hook 'comint-mode-hook 'turn-on-evil-mode)
+      (add-hook 'Info-mode-hook 'turn-off-evil-mode)
+      (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
+      (evil-ex-define-cmd "wq" (message "quit disabled"))
 
-    ;; Take vim's window management features
-    (global-unset-key (kbd "C-w"))
-    (global-set-key (kbd "C-w C-w") 'evil-window-prev)
-    (global-set-key (kbd "C-w C-j") 'evil-window-down)
-    (global-set-key (kbd "C-w C-k") 'evil-window-up)
-    (global-set-key (kbd "C-w C-h") 'evil-window-left)
-    (global-set-key (kbd "C-w C-l") 'evil-window-right)
-    (global-set-key (kbd "C-w w") 'evil-window-prev)
-    (global-set-key (kbd "C-w j") 'evil-window-down)
-    (global-set-key (kbd "C-w k") 'evil-window-up)
-    (global-set-key (kbd "C-w h") 'evil-window-left)
-    (global-set-key (kbd "C-w l") 'evil-window-right)
 
-    ;; if in terminal mode
-    (unless (display-graphic-p)
-      (define-key evil-insert-state-map (kbd "ESC") #'evil-force-normal-state)
-      (define-key evil-insert-state-map [escape] 'evil-normal-state))
+      ;; Take vim's window management features
+      (global-unset-key (kbd "C-w"))
+      (global-set-key (kbd "C-w C-w") 'evil-window-prev)
+      (global-set-key (kbd "C-w C-j") 'evil-window-down)
+      (global-set-key (kbd "C-w C-k") 'evil-window-up)
+      (global-set-key (kbd "C-w C-h") 'evil-window-left)
+      (global-set-key (kbd "C-w C-l") 'evil-window-right)
+      (global-set-key (kbd "C-w w") 'evil-window-prev)
+      (global-set-key (kbd "C-w j") 'evil-window-down)
+      (global-set-key (kbd "C-w k") 'evil-window-up)
+      (global-set-key (kbd "C-w h") 'evil-window-left)
+      (global-set-key (kbd "C-w l") 'evil-window-right)
 
-    ;; Don't wait for any other keys after escape is pressed.
-    (setq evil-esc-delay 0)
+      ;; if in terminal mode
+      (unless (display-graphic-p)
+        (define-key evil-insert-state-map (kbd "ESC") #'evil-force-normal-state)
+        (define-key evil-insert-state-map [escape] 'evil-normal-state))
 
-    ;; Make sure escape gets back to normal state and quits things.
-    (define-key evil-insert-state-map [escape] 'evil-normal-state)
-    (define-key evil-visual-state-map [escape] 'evil-normal-state)
-    (define-key evil-emacs-state-map [escape] 'evil-normal-state)
-    (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-    (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
-    (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
-    (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
-    (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
-    (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
+      ;; Don't wait for any other keys after escape is pressed.
+      (setq evil-esc-delay 0)
 
-    ;; Calc dispatch
-    (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
+      ;; Make sure escape gets back to normal state and quits things.
+      (define-key evil-insert-state-map [escape] 'evil-normal-state)
+      (define-key evil-visual-state-map [escape] 'evil-normal-state)
+      (define-key evil-emacs-state-map [escape] 'evil-normal-state)
+      (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
-    ;; More helm mappings
-    (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
-    (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
-    (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
-    (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
+      ;; Calc dispatch
+      (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
 
-    ;; Undo-Tree
-    (define-key evil-normal-state-map (kbd ",u") 'undo-tree-visualize)
+      ;; More helm mappings
+      (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
+      (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
+      (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
+      (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
 
-    ;; Next and last error bindings
-    (define-key evil-normal-state-map (kbd ",<") 'next-error)
-    (define-key evil-normal-state-map (kbd ",>") 'previous-error)
+      ;; Undo-Tree
+      (define-key evil-normal-state-map (kbd ",u") 'undo-tree-visualize)
 
-    ;; Indent region in visual-mode with tab
-    (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
+      ;; Next and last error bindings
+      (define-key evil-normal-state-map (kbd ",<") 'next-error)
+      (define-key evil-normal-state-map (kbd ",>") 'previous-error)
 
-  (ome-install 'evil)
+      ;; Indent region in visual-mode with tab
+      (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
 
-  (defun ome-evil-nerd-commenter-setup ()
-    (define-key evil-normal-state-map (kbd ",cp") 'evilnc-comment-or-uncomment-paragraphs)
-    ;; Comment or uncomment the current line or marked region
-    (define-key evil-normal-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-lines))
+    (ome-install 'evil)
 
-  (ome-install 'evil-nerd-commenter)
+    (defun ome-evil-nerd-commenter-setup ()
+      (define-key evil-normal-state-map (kbd ",cp") 'evilnc-comment-or-uncomment-paragraphs)
+      ;; Comment or uncomment the current line or marked region
+      (define-key evil-normal-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-lines))
+
+    (ome-install 'evil-nerd-commenter)
 #+END_SRC
 
 * Evil-leader
