@@ -135,6 +135,7 @@ contains an up to date list of the currently supported languages.
      (ditaa . t)
      (plantuml . t)
      (sql . t)
+     (awk . t)
      (sqlite . t)))
 
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
