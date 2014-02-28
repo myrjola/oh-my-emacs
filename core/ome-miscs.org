@@ -327,13 +327,13 @@ just enjoy it!
   (defun ome-projectile-setup ()
     (projectile-global-mode)
     (setq projectile-enable-caching t)
-    (global-set-key (kbd "C-x c h") 'helm-projectile))
+    (global-set-key (kbd "C-x c h") 'helm-projectile)
     (define-key evil-normal-state-map (kbd ",ps") 'projectile-switch-project)
     (define-key evil-normal-state-map (kbd ",pa") 'projectile-ag)
     (define-key evil-normal-state-map (kbd ",ph") 'helm-projectile)
     (define-key evil-normal-state-map (kbd ",pr") 'projectile-replace)
     (define-key evil-normal-state-map (kbd ",pc") 'projectile-compile-project)
-    (define-key evil-normal-state-map (kbd ",pt") 'projectile-regenerate-tags)
+    (define-key evil-normal-state-map (kbd ",pt") 'projectile-regenerate-tags))
 
   (ome-install 'projectile)
 #+END_SRC
@@ -575,6 +575,7 @@ Some commonly used keybindings for =w3m-mode=:
     ;; (setq w3m-default-display-inline-images t)
     (setq w3m-home-page "http://www.google.com/ncr")
     (setq browse-url-browser-function 'w3m-browse-url)
+    (setq w3m-default-display-inline-images t)
     (global-set-key (kbd "C-x w") 'browse-url-at-point))
 
   (when (executable-find "w3m")
