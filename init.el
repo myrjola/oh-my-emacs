@@ -48,8 +48,7 @@
                      :after (progn
                               (ome-org-mode-setup)))
              '(:name evil-mode
-                     :after (progn
-                              (ome-evil-setup))))
+                     :after (progn (require 'evil))))
 
 (el-get 'sync (mapcar 'el-get-source-name el-get-sources))
 
