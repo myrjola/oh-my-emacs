@@ -120,7 +120,9 @@ This awesome mode makes live editing in a browser easy
 
 #+begin_src emacs-lisp
   (defun ome-impatient-mode-setup ()
-    (httpd-start)
-    (require 'impatient-mode))
+    (eval-after-load "simple-httpd"
+      (httpd-start)
+      (require 'impatient-mode)))
   (ome-install 'impatient-mode)
+  (ome-install 'simple-httpd)
 #+end_src
