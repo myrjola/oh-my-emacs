@@ -46,7 +46,10 @@
 (add-to-list 'el-get-sources
              '(:name org-mode
                      :after (progn
-                              (ome-org-mode-setup))))
+                              (ome-org-mode-setup)))
+             '(:name evil-mode
+                     :after (progn
+                              (ome-evil-setup))))
 
 (el-get 'sync (mapcar 'el-get-source-name el-get-sources))
 
