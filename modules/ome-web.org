@@ -119,11 +119,7 @@ web projects. The answer lies in the [[http://www.gnu.org/software/emacs/manual/
 This awesome mode makes live editing in a browser easy
 
 #+begin_src emacs-lisp
-  (defun ome-impatient-mode-setup ()
-    (eval-after-load "simple-httpd"
-      (progn
-      (httpd-start)
-      (require 'impatient-mode))))
-  (ome-install 'impatient-mode)
+  (defun ome-impatient-mode-setup ())
   (ome-install 'simple-httpd)
+  (ome-install 'impatient-mode)
 #+end_src
