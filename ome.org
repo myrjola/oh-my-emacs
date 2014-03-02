@@ -421,12 +421,11 @@ you really need it.
 
 #+NAME: load various ome files
 #+BEGIN_SRC emacs-lisp
-  (ome-load "core/ome-advanced.org" "Evil")
+  (ome-load "core/ome-basic.org")
+  (ome-load "core/ome-auto-mode.org")
+  (ome-load "core/ome-advanced.org")
   (ome-load "core/ome-org.org")
   (unless noninteractive (progn
-                           (ome-load "core/ome-advanced.org")
-                           (ome-load "core/ome-auto-mode.org")
-                           (ome-load "core/ome-basic.org")
                            (ome-load "core/ome-completion.org")
                            (ome-load "core/ome-gui.org")
                            (ome-load "core/ome-keybindings.org")
