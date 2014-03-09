@@ -673,6 +673,21 @@ like.
   (ome-install 'sparql-mode)
 #+end_src
 
+* Blogging with octopress
+  I use octopress for my blog
+
+#+begin_src emacs-lisp
+  (defun ome-org-octopress-setup ()
+    (require 'org-octopress)
+    (setq org-octopress-directory-top       "~/git/octopress/source")
+    (setq org-octopress-directory-posts     "~/git/octopress/source/_posts")
+    (setq org-octopress-directory-org-top   "~/git/octopress/source")
+    (setq org-octopress-directory-org-posts "~/git/octopress/source/blog")
+    (setq org-octopress-setup-file          "~/org/setupfile.org"))
+
+  (ome-install 'org-octopress)
+#+end_src
+
 * Todo
 - Enable flyspell and ispell in text-mode.
 - Add a dictionary support, such as =sdcv=? Or a better translator support such

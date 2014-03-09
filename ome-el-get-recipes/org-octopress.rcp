@@ -1,0 +1,4 @@
+(:name org-octopress
+       :type git
+       :depends orglue
+       :url "https://github.com/yoshinari-nomura/org-octopress.git")
