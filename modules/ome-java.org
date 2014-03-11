@@ -19,13 +19,6 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
   :CUSTOM_ID: java-el-get-packages
   :END:
 
-#+NAME: java-el-get-packages
-#+CAPTION: El-get packages for ome-java module
-
-|             | Status   | Description                           |
-|-------------+----------+---------------------------------------|
-| [[https://github.com/senny/emacs-eclim][emacs-eclim]] | Required | The bridge between emacs and eclipse. |
-
 * Eclim
   :PROPERTIES:
   :CUSTOM_ID: eclim
@@ -108,8 +101,8 @@ Java Development in Emacs]] show you an illustrated guide.
                 (add-to-list 'ac-sources 'ac-source-emacs-eclim)
                 (eclim-mode t))))
 
-  (when (executable-find "eclipse")
-    (ome-install 'eclim))
+  ;;(when (executable-find "eclipse")
+    ;;(ome-install 'eclim))
 #+END_SRC
 
 * Todo
