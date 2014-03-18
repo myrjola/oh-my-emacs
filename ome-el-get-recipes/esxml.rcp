@@ -1,0 +1,3 @@
+(:name esxml
+:type elpa
+:description "Library for working with xml via esxml and sxml [github]")

@@ -499,6 +499,17 @@ math]]" for details.
 
 #+end_src
 
+* org-trello
+
+Trello is great for those that haven't discovered the joys of org-mode
+
+#+begin_src emacs-lisp
+  (defun ome-org-trello-setup ()
+    (require 'org-trello))
+
+  (ome-install 'org-trello)
+#+end_src
+
 
 * XeLaTeX and pdfLaTeX Export Settings
    Configure org-mode to export directly to PDF using  xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.

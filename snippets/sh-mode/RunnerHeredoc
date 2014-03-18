@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: RunnerHeredoc
+# key: runnerhere
+# --
+./runner -sync "$(cat <<'EOF'
+$0
+EOF
+)"
