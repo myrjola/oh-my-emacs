@@ -608,7 +608,7 @@ Some commonly used keybindings for =w3m-mode=:
   (defun ome-emacs-w3m-setup ()
     ;; (setq w3m-default-display-inline-images t)
     (setq w3m-home-page "http://www.google.com/ncr")
-    (setq browse-url-browser-function 'w3m-browse-url)
+    ;; (setq browse-url-browser-function 'w3m-browse-url)
     (setq w3m-default-display-inline-images t)
     (global-set-key (kbd "C-x w") 'browse-url-at-point))
 
