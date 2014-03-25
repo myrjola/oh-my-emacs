@@ -504,10 +504,10 @@ math]]" for details.
 Trello is great for those that haven't discovered the joys of org-mode
 
 #+begin_src emacs-lisp
-  (defun ome-org-trello-setup ()
-    (require 'org-trello))
-
-  (ome-install 'org-trello)
+  ;(defun ome-org-trello-setup ()
+    ;(require 'org-trello))
+;
+  ;(ome-install 'org-trello)
 #+end_src
 
 

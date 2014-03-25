@@ -1,4 +1,4 @@
 (:name org-trello
        :type git
-       :depends (request elnode)
+       :depends (request elnode esxml)
        :url "https://github.com/org-trello/org-trello.git")
