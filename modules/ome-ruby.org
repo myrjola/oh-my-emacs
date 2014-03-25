@@ -114,27 +114,44 @@ amazing, elegant package.
 * Misc defuns
 
 #+begin_src emacs-lisp
-
   (defun deploy-customer-config(server instance)
     "Deploy customer-config to server"
     (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
     (let (
-          (remotepath (concat "/" server ":/opt/apps/" instance "/current/WEB-INF/customer/" (file-name-nondirectory(buffer-file-name))))
-          (currentfile buffer-file-name))
-      (save-restriction
-        (widen)
-        (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
+          (old-or-new-current (if (equal (car (split-string server "_")) "old")
+                                  "/processor_ui/current/" "/current/WEB-INF/"))
+          (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
+                                  "capistrano" "apps")))
+      (let ((remotepath (concat "/" (car (split-string server "old_" t))
+                                ":/opt/" apps-or-capistrano "/" instance
+                                old-or-new-current "customer/"
+                                (file-name-nondirectory(buffer-file-name)))))
+        (message "remotepath: %s" remotepath)
 
-      (find-file currentfile)))
+        (let ((remotecopypath (concat remotepath ".cp." (format-time-string "%s")))
+              (currentfile (buffer-file-name)))
+          (message "remotecopypath: %s" remotecopypath)
+          (find-file remotepath)
+          (save-restriction
+            (widen)
+            (write-region (point-min) (point-max) remotecopypath nil nil nil 'confirm))
+          (kill-buffer (buffer-name))
+          (find-file currentfile)
+          (save-restriction
+            (widen)
+            (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
 
-  (define-minor-mode evil-ruby-mode
-    "Evil ruby bindings"
-    :keymap (make-sparse-keymap)
-    (evil-normalize-keymaps))
+          (find-file currentfile)))))
 
-  (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
-    'deploy-customer-config)
-  (add-hook 'ruby-mode-hook 'evil-ruby-mode)
+
+    (define-minor-mode evil-ruby-mode
+      "Evil ruby bindings"
+      :keymap (make-sparse-keymap)
+      (evil-normalize-keymaps))
+
+    (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
+      'deploy-customer-config)
+    (add-hook 'ruby-mode-hook 'evil-ruby-mode)
 
 #+end_src
 
