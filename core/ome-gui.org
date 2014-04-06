@@ -78,7 +78,7 @@ self-adapting.
   ;; Setting English Font
   (if (member "Source Code Pro" (font-family-list))
       (set-face-attribute
-       'default nil :font "Source Code Pro 10"))
+       'default nil :font "Source Code Pro 9"))
 #+END_SRC
 
 * Full screen support
