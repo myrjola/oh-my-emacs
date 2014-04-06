@@ -684,6 +684,15 @@ like.
     (eval-after-load "helm"
       '(diminish 'helm-mode))
 
+    (eval-after-load "smartparens"
+      '(diminish 'smartparens-mode))
+
+    (eval-after-load "yasnippet"
+      '(diminish 'yas-minor-mode))
+
+    (eval-after-load "org-cdlatex"
+      '(diminish 'org-cdlatex-mode))
+
     (eval-after-load "projectile"
       '(diminish 'projectile-mode "Prjl"))
 
