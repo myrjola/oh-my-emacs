@@ -106,7 +106,7 @@ sequence =C-c C-v h= (bound to `=org-babel-describe-bindings=') will
 display a list of the code blocks commands and their related keys.
 
 #+NAME: speed-keys
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-use-speed-commands t)
 #+END_SRC
 
@@ -260,8 +260,8 @@ math]]" for details.
 
 #+NAME: org-cdlatex
 #+BEGIN_SRC emacs-lisp
-  (when (el-get-package-is-installed 'cdlatex-mode)
-    (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
+  ;(when (el-get-package-is-installed 'cdlatex-mode)
+    ;(add-hook 'org-mode-hook 'turn-on-org-cdlatex))
 #+END_SRC
 
 * Agenda configuration
@@ -270,6 +270,9 @@ math]]" for details.
         (require 'org-protocol)
         (require 'org-agenda)
         (require 'org-habit)
+
+        (setq org-clock-persist 'history)
+        (org-clock-persistence-insinuate)
 
         ; Shortcut to gtd-file
         (defun gtd ()
@@ -480,6 +483,11 @@ math]]" for details.
   (evil-define-key 'normal evil-org-src-mode-map
     (kbd ",cf") 'org-edit-src-exit
     (kbd ",ck") 'org-edit-src-abort)
+
+  (diminish 'evil-org-mode)
+  (diminish 'evil-org-capture-mode)
+  (diminish 'evil-org-src-mode)
+
 #+end_src
 
 * Misc defuns
