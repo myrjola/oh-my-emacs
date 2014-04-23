@@ -731,6 +731,25 @@ like.
   (ome-install 'org-octopress)
 #+end_src
 
+* Habitrpg
+  I'm trying to quit procrastinating with this service.
+
+#+begin_src emacs-lisp
+    (defun ome-habitrpg-setup ()
+      (require 'habitrpg)
+      (setq habitrpg-api-user "8499759c-f716-49cb-bcdc-0e843d85879b")
+      (setq habitrpg-api-token "f03196c0-e9c8-4cf0-87d7-70f09cdb9b6f")
+      (add-hook 'org-after-todo-state-change-hook 'habitrpg-add 'append)
+      (global-set-key (kbd "C-c C-x h") 'habitrpg-add)
+      (global-set-key (kbd "<f9> a") 'habitrpg-status)
+      (add-to-list 'hrpg-tags-list "PRODUCTIVE")
+      (add-to-list 'hrpg-tags-list "WORK")
+      (add-hook 'org-clock-in-hook 'habitrpg-clock-in)
+      (add-hook 'org-clock-out-hook 'habitrpg-clock-out))
+
+    (ome-install 'habitrpg)
+#+end_src
+
 * Todo
 - Enable flyspell and ispell in text-mode.
 - Add a dictionary support, such as =sdcv=? Or a better translator support such

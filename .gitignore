@@ -45,3 +45,6 @@ abbrev_defs
 
 # bookmarks
 bookmarks
+/flycheck_org-clock-save.el
+/org-clock-save.el
+/request/curl-cookie-jar

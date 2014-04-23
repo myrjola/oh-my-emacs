@@ -1,0 +1,4 @@
+(:name habitrpg
+       :type git
+       :depends (request deferred)
+       :url "https://github.com/ryjm/habitrpg.el.git")
