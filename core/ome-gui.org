@@ -52,7 +52,7 @@ This is part of the [[https://github.com/xiaohanyu/oh-my-emacs][oh-my-emacs]].
   (setq show-paren-style 'expression)
 
 #+END_SRC
-* Choose Monaco as the Default English Font
+* Choose Source code pro as the Default English Font
   :PROPERTIES:
   :CUSTOM_ID: font
   :END:
@@ -117,10 +117,12 @@ applications, not only for emacs. I'll set this as the default theme for
 oh-my-emacs.
 #+NAME: color-theme
 #+BEGIN_SRC emacs-lisp
-  (defun ome-color-theme-solarized-setup ()
-    (load-theme 'solarized-dark t))
+  (defun ome-solarized-emacs-setup ()
+    (load-theme 'solarized-dark t)
+    ;; Make underlines more readable on X11
+    (if (equal window-system 'x) (setq x-underline-at-descent-line t) ()))
 
-  (ome-install 'color-theme-solarized)
+  (ome-install 'solarized-emacs)
 #+END_SRC
 
 * Powerline
@@ -134,17 +136,7 @@ inspired by [[https://github.com/Lokaltog/vim-powerline][vim-powerline]]. There'
 #+NAME: powerline
 #+BEGIN_SRC emacs-lisp
   (defun ome-powerline-setup ()
-    (powerline-default-theme)
-    (setq powerline-color1 "#073642")
-    (setq powerline-color2 "#002b36")
-
-    (set-face-attribute 'mode-line nil
-                        :foreground "#fdf6e3"
-                        :background "#2aa198"
-                        :box nil)
-    (set-face-attribute 'mode-line-inactive nil
-                        :box nil)
-    )
+    (powerline-default-theme))
 
   (ome-install 'powerline)
 #+END_SRC
