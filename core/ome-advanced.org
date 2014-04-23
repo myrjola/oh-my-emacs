@@ -100,11 +100,6 @@ Emacs session.
     (global-set-key (kbd "C-w h") 'evil-window-left)
     (global-set-key (kbd "C-w l") 'evil-window-right)
 
-    ;; if in terminal mode
-    (unless (display-graphic-p)
-      (define-key evil-insert-state-map (kbd "ESC") #'evil-force-normal-state)
-      (define-key evil-insert-state-map [escape] 'evil-normal-state))
-
     ;; Don't wait for any other keys after escape is pressed.
     (setq evil-esc-delay 0)
 

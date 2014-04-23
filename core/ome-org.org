@@ -103,6 +103,8 @@ See the `=org-speed-commands-default=' variable for a list of the keys
 and commands enabled at the beginning of headlines.  All code blocks
 are available at the beginning of a code block, the following key
 sequence =C-c C-v h= (bound to `=org-babel-describe-bindings=') will
+
+
 display a list of the code blocks commands and their related keys.
 
 #+NAME: speed-keys
@@ -408,6 +410,9 @@ math]]" for details.
   (define-key evil-normal-state-map (kbd ",at") 'org-attach)
   (define-key evil-normal-state-map (kbd ",ba") 'previous-buffer)
 
+  ;; For some reason this binding was broken in org-mode
+  (evil-define-key 'insert evil-org-mode-map
+              (kbd "ESC") 'evil-normal-state)
 
   ;; regular normal state shortcuts.
   (evil-define-key 'normal evil-org-mode-map
