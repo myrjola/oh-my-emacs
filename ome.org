@@ -14,22 +14,28 @@
   :CUSTOM_ID: ome-prerequisites
   :END:
 
+This project was born for emacs 24+, emacs 23 is not officially supported and
+there's no plan to support it. One of the builtin package of oh-my-emacs, [[https://github.com/emacs-helm/helm][helm]],
+required Emacs version 24.3+, and oh-my-emacs will work best with recent
+version emacs.
+
 The following software is really basic that almost every el-get package will
 need one of them.
 
 #+NAME: ome-prerequisites
 #+CAPTION: Prerequisites for all oh-my-emacs module.
-|            | Windows | Ubuntu/Debian/Mint | ArchLinux | Fedora     | Mac OS X | Mandatory? |
-|------------+---------+--------------------+-----------+------------+----------+------------|
-| [[http://savannah.nongnu.org/projects/cvs][cvs]]        |         | cvs                |           | cvs        |          | Yes        |
-| [[http://subversion.apache.org/][subversion]] |         | subversion         |           | subversion |          | Yes        |
-| [[http://mercurial.selenic.com/][mercurial]]  |         | mercurial          |           | mercurial  |          | Yes        |
-| [[http://git-scm.com/][git]]        |         | git                |           | git        |          | Yes        |
-| [[http://www.gnu.org/software/make/][make]]       |         | make               |           | make       |          | Yes        |
-| [[http://www.gnu.org/software/texinfo/][texinfo]]    |         | texinfo            |           | texinfo    |          | Yes        |
-| [[http://gcc.gnu.org/][gcc]]        |         | gcc                |           | gcc        |          | Yes        |
-| [[http://www.gnu.org/software/automake/][automake]]   |         | automake           |           | automake   |          | Yes        |
-| [[http://www.gnu.org/software/autoconf/][autoconf]]   |         | autoconf           |           | autoconf   |          | Yes        |
+|             | Windows | Ubuntu/Debian/Mint      | ArchLinux | Fedora     | Mac OS X | Mandatory? |
+|-------------+---------+-------------------------+-----------+------------+----------+------------|
+| [[https://www.gnu.org/software/emacs/][emacs 24.3+]] |         | emacs24(emacs-snapshot) |           |            |          | Yes        |
+| [[http://savannah.nongnu.org/projects/cvs][cvs]]         |         | cvs                     |           | cvs        |          | Yes        |
+| [[http://subversion.apache.org/][subversion]]  |         | subversion              |           | subversion |          | Yes        |
+| [[http://mercurial.selenic.com/][mercurial]]   |         | mercurial               |           | mercurial  |          | Yes        |
+| [[http://git-scm.com/][git]]         |         | git                     |           | git        |          | Yes        |
+| [[http://www.gnu.org/software/make/][make]]        |         | make                    |           | make       |          | Yes        |
+| [[http://www.gnu.org/software/texinfo/][texinfo]]     |         | texinfo                 |           | texinfo    |          | Yes        |
+| [[http://gcc.gnu.org/][gcc]]         |         | gcc                     |           | gcc        |          | Yes        |
+| [[http://www.gnu.org/software/automake/][automake]]    |         | automake                |           | automake   |          | Yes        |
+| [[http://www.gnu.org/software/autoconf/][autoconf]]    |         | autoconf                |           | autoconf   |          | Yes        |
 
 * Introduction
   :PROPERTIES:
@@ -425,6 +431,7 @@ you really need it.
   (ome-load "core/ome-auto-mode.org")
   (ome-load "core/ome-advanced.org")
   (ome-load "core/ome-org.org")
+
   (unless noninteractive (progn
                            (ome-load "core/ome-completion.org")
                            (ome-load "core/ome-gui.org")
@@ -436,11 +443,11 @@ you really need it.
                            (ome-load "modules/ome-javascript.org")
                            (ome-load "modules/ome-emacs-lisp.org")
                            (ome-load "modules/ome-common-lisp.org")
-                           (ome-load "modules/ome-clojure.org")
-                           (ome-load "modules/ome-scheme.org")
+                           ;; (ome-load "modules/ome-clojure.org")
+                           ;; (ome-load "modules/ome-scheme.org")
                            (ome-load "modules/ome-python.org")
                            (ome-load "modules/ome-ruby.org")
-                           (ome-load "modules/ome-ocaml.org")
+                           ;; (ome-load "modules/ome-ocaml.org")
                            (ome-load "modules/ome-tex.org")
                            (ome-load "modules/ome-web.org")))
 #+END_SRC
