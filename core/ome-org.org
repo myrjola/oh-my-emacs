@@ -480,9 +480,10 @@ math]]" for details.
     (kbd ",cf") 'org-edit-src-exit
     (kbd ",ck") 'org-edit-src-abort)
 
-  (diminish 'evil-org-mode)
-  (diminish 'evil-org-capture-mode)
-  (diminish 'evil-org-src-mode)
+  (eval-after-load 'diminish '(progn
+                                (diminish 'evil-org-mode)
+                                (diminish 'evil-org-capture-mode)
+                                (diminish 'evil-org-src-mode)))
 
 #+end_src
 
