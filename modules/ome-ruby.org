@@ -124,7 +124,7 @@ amazing, elegant package.
                                   "/processor_ui/current/" "/current/WEB-INF/"))
           (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
                                   "capistrano" "apps")))
-      (let ((remotepath (concat "/" (car (split-string server "old_" t))
+      (let ((remotepath (concat "/ssh:alasin|ssh:" (car (split-string server "old_" t))
                                 ":/opt/" apps-or-capistrano "/" instance
                                 old-or-new-current "customer/"
                                 (file-name-nondirectory(buffer-file-name)))))

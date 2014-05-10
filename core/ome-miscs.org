@@ -696,6 +696,9 @@ like.
     (eval-after-load "projectile"
       '(diminish 'projectile-mode "Prjl"))
 
+    (eval-after-load "magit"
+      '(diminish 'magit-auto-revert-mode))
+
     (eval-after-load "undo-tree"
       '(diminish 'undo-tree-mode)))
 
@@ -731,6 +734,15 @@ like.
   (ome-install 'org-octopress)
 #+end_src
 
+* Haskell
+I use xmonad as my window manager, haskell-mode makes it easy to ensure correct syntax.
+#+begin_src emacs-lisp
+    (defun ome-haskell-mode-setup ()
+      (require 'haskell-mode))
+
+    (ome-install 'haskell-mode)
+#+end_src
+
 * Habitrpg
   I'm trying to quit procrastinating with this service.
 
@@ -749,6 +761,21 @@ like.
 
     (ome-install 'habitrpg)
 #+end_src
+
+* Evil-god-state
+  a.k.a. satan-mode, I map space for one-off god-mode commands (essentially Control-key always pressed)
+
+#+begin_src emacs-lisp
+      (defun ome-evil-god-state-setup ()
+        (require 'evil-god-state)
+        (evil-define-key 'normal global-map (kbd "SPC") 'evil-execute-in-god-state)
+        (add-hook 'evil-god-start-hook (lambda () (diminish 'god-local-mode)))
+        (add-hook 'evil-god-stop-hook (lambda () (diminish-undo 'god-local-mode))))
+
+      (ome-install 'evil-god-state)
+
+#+end_src
+
 
 * Todo
 - Enable flyspell and ispell in text-mode.

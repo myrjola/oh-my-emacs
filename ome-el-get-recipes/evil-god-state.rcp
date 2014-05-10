@@ -1,0 +1,4 @@
+(:name evil-god-state
+       :type git
+       :depends (god-mode)
+       :url "https://github.com/gridaphobe/evil-god-state.git")

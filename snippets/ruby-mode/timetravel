@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: timetravel
+# key: timetravel
+# --
+def chainmissing(sn);
+  FastormDb.database.get_snapshot(sn).begin_transaction.bind_to_thread;
+  Location.where("chains.code = '30'").count;
+end;
