@@ -144,7 +144,9 @@ elpy.
 
 * Django
 
-#+begin_src emacs-lisp
+I chose pony-mode over python-django because of ease of use
+
+#+begin_src emacs-lisp :tangle no
   (defun ome-python-django-setup ()
     (require 'python-django)
     (define-key evil-normal-state-map (kbd ",j") 'python-django-open-project)
@@ -152,6 +154,15 @@ elpy.
                                                'python-django-ui-allowed-extensions "djhtml")))
 
   (ome-install 'python-django)
+
+
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (defun ome-pony-mode-setup ()
+    (require 'pony-mode))
+
+  (ome-install 'pony-mode)
 
 
 #+end_src
