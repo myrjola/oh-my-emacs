@@ -450,6 +450,8 @@ you really need it.
                            ;; (ome-load "modules/ome-ocaml.org")
                            (ome-load "modules/ome-tex.org")
                            (ome-load "modules/ome-web.org")))
+
+  (yas-global-mode 1) ;; Somehow this is needed again to activate yasnippet
 #+END_SRC
 
 ** Load User/System Specific Files

@@ -1,0 +1,7 @@
+* Mu4e
+
+I'm trying emacs as my mail client Mu4e seems nice
+
+#+begin_src emacs-lisp
+
+#+end_src

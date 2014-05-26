@@ -72,7 +72,7 @@ and I hope you enjoy it.
   (defun ome-auto-complete-setup ()
     (require 'auto-complete-config)
 
-    (define-key ac-mode-map (kbd "M-/") 'ac-fuzzy-complete)
+    (define-key ac-mode-map (kbd "C-c f") 'ac-fuzzy-complete)
     (dolist (ac-mode '(text-mode org-mode))
       (add-to-list 'ac-modes ac-mode))
     (dolist (ac-mode-hook '(text-mode-hook prog-mode-hook))
@@ -82,7 +82,12 @@ and I hope you enjoy it.
                   (add-to-list 'ac-sources 'ac-source-files-in-current-dir)
                   (add-to-list 'ac-sources 'ac-source-filename))))
 
-    (ac-config-default))
+    (ac-config-default)
+    ;;; set the trigger key so that it can work together with yasnippet on tab key,
+    ;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
+    ;;; activate, otherwise, auto-complete will
+    (ac-set-trigger-key "TAB")
+    (ac-set-trigger-key "<tab>"))
 
   (defun ome-pos-tip-setup ()
     (require 'pos-tip))
@@ -305,17 +310,19 @@ TODO:
     (setq yas-prompt-functions
           '(yas-popup-isearch-prompt
             yas-no-prompt))
+    ;; org-mode support
+    (setq yas-trigger-key "<tab>")
     (yas-global-mode 1))
 
-  (defun yas/org-very-safe-expand ()
-    (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
+  ;; (defun yas/org-very-safe-expand ()
+  ;;   (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (make-variable-buffer-local 'yas/trigger-key)
-              (setq yas/trigger-key [tab])
-              (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-              (define-key yas/keymap [tab] 'yas/next-field)))
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (make-variable-buffer-local 'yas/trigger-key)
+  ;;             (setq yas/trigger-key [tab])
+  ;;             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+  ;;             (define-key yas/keymap [tab] 'yas/next-field)))
 
   (ome-install 'popup)
   (ome-install 'yasnippet)

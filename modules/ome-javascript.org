@@ -156,11 +156,11 @@ The only thing I dislike about js2-mode is indentation. That's why I adopt
 settings and works as expected.
 
 #+NAME: js2-mode
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (defun ome-js2-mode-setup ()
     (add-hook 'js2-mode-hook
               (lambda ()
-                (setq js2-basic-offset 2)))
+                (setq js2-basic-offset)))
     (eval-after-load 'js2-mode
       '(define-key js2-mode-map (kbd "RET") 'js2-line-break))
     (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
