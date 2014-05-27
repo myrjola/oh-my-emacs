@@ -422,7 +422,10 @@ math]]" for details.
     "$" 'org-end-of-line
     "^" 'org-beginning-of-line
     "-" 'org-ctrl-c-minus
+    "<" 'org-metaleft
+    ">" 'org-metaright
     ",r" 'org-refile
+    ",t" 'org-show-todo-tree
     ",." 'org-ctrl-c-ctrl-c
     ",*" 'org-toggle-heading
     (kbd ",ar") 'org-archive-subtree

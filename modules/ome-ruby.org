@@ -49,6 +49,29 @@ functions for font-locking, indentation and code navigation.
 #+NAME: ruby-mode
 #+BEGIN_SRC emacs-lisp
   (defun ome-ruby-mode-setup ()
+    (defadvice ruby-indent-line (after line-up-args activate)
+      (let (indent prev-indent arg-indent)
+        (save-excursion
+          (back-to-indentation)
+          (when (zerop (car (syntax-ppss)))
+            (setq indent (current-column))
+            (skip-chars-backward " \t\n")
+            (when (eq ?, (char-before))
+              (ruby-backward-sexp)
+              (back-to-indentation)
+              (setq prev-indent (current-column))
+              (skip-syntax-forward "w_.")
+              (skip-chars-forward " ")
+              (setq arg-indent (current-column)))))
+        (when prev-indent
+          (let ((offset (- (current-column) indent)))
+            (cond ((< indent prev-indent)
+                   (indent-line-to prev-indent))
+                  ((= indent prev-indent)
+                   (indent-line-to arg-indent)))
+            (when (> offset 0) (forward-char offset))))))
+
+    (setq ruby-deep-indent-paren nil)
     ;; Ah, this huge auto-mode-alist list comes from emacs prelude
     (add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
@@ -63,6 +86,7 @@ functions for font-locking, indentation and code navigation.
     (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode)))
 
   (ome-ruby-mode-setup)
+
 #+END_SRC
 
 * Inf-ruby
@@ -114,46 +138,63 @@ amazing, elegant package.
 #+END_SRC
 
 * Misc defuns
+  #+begin_src emacs-lisp
+    (defun format-tql-inside-string ()
+      (interactive)
+      (search-backward "\"")
+      (right-char)
+      (if (eolp) (right-char) (insert "\n"))
+      (set-mark-command nil)
+      (search-forward "\"")
+      (right-char)
+      (shell-command-on-region (region-beginning) (region-end) "astyle -xC80 -xL -U -s2 -m0" :REPLACE t)
+      (search-forward "\"")
+      (right-char)
+      (kill-whole-line))
+  #+end_src
 
 #+begin_src emacs-lisp
-  (defun deploy-customer-config(server instance)
-    "Deploy customer-config to server"
-    (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
-    (let (
-          (old-or-new-current (if (equal (car (split-string server "_")) "old")
-                                  "/processor_ui/current/" "/current/WEB-INF/"))
-          (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
-                                  "capistrano" "apps")))
-      (let ((remotepath (concat "/ssh:alasin|ssh:" (car (split-string server "old_" t))
-                                ":/opt/" apps-or-capistrano "/" instance
-                                old-or-new-current "customer/"
-                                (file-name-nondirectory(buffer-file-name)))))
-        (message "remotepath: %s" remotepath)
+    (defun deploy-customer-config(server instance)
+      "Deploy customer-config to server"
+      (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
+      (let (
+            (old-or-new-current (if (equal (car (split-string server "_")) "old")
+                                    "/processor_ui/current/" "/current/WEB-INF/"))
+            (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
+                                    "capistrano" "apps")))
+        (let ((remotepath (concat "/ssh:" (car (split-string server "old_" t))
+                                  ":/opt/" apps-or-capistrano "/" instance
+                                  old-or-new-current "customer/"
+                                  (file-name-nondirectory(buffer-file-name)))))
+          (message "remotepath: %s" remotepath)
 
-        (let ((remotecopypath (concat remotepath ".cp." (format-time-string "%s")))
-              (currentfile (buffer-file-name)))
-          (message "remotecopypath: %s" remotecopypath)
-          (find-file remotepath)
-          (save-restriction
-            (widen)
-            (write-region (point-min) (point-max) remotecopypath nil nil nil 'confirm))
-          (kill-buffer (buffer-name))
-          (find-file currentfile)
-          (save-restriction
-            (widen)
-            (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
+          (let ((remotecopypath (concat remotepath ".cp." (format-time-string "%s")))
+                (currentfile (buffer-file-name)))
+            (message "remotecopypath: %s" remotecopypath)
+            (find-file remotepath)
+            (save-restriction
+              (widen)
+              (write-region (point-min) (point-max) remotecopypath nil nil nil 'confirm))
+              (diff-no-select (current-buffer) currentfile)
+            (kill-buffer (buffer-name))
+            (find-file currentfile)
+            (save-restriction
+              (widen)
+              (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
 
-          (find-file currentfile)))))
+            (find-file currentfile)
+            (display-buffer "*Diff*")))))
 
+      (define-minor-mode evil-ruby-mode
+        "Evil ruby bindings"
+        :keymap (make-sparse-keymap)
+        (evil-normalize-keymaps))
 
-    (define-minor-mode evil-ruby-mode
-      "Evil ruby bindings"
-      :keymap (make-sparse-keymap)
-      (evil-normalize-keymaps))
-
-    (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
-      'deploy-customer-config)
-    (add-hook 'ruby-mode-hook 'evil-ruby-mode)
+      (evil-define-key 'normal evil-ruby-mode-map (kbd ",d")
+        'deploy-customer-config)
+      (evil-define-key 'normal evil-ruby-mode-map (kbd ",f")
+        'format-tql-inside-string)
+      (add-hook 'ruby-mode-hook 'evil-ruby-mode)
 
 #+end_src
 
