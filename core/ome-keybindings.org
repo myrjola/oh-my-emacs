@@ -15,9 +15,15 @@ Key bindings for oh-my-emacs, mainly imported from [[https://github.com/eschulte
   (global-set-key (kbd "C-x \\") 'align-regexp)
 #+END_SRC
 
+* Formatting options
+
+#+begin_src emacs-lisp
+  (define-key evil-normal-state-map (kbd ",f") 'fill-paragraph)
+#+end_src
+
 * Completion that uses many different methods to find options.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "C-M-h") 'hippie-expand)
 #+END_SRC
 
 * Font size

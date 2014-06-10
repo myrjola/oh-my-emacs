@@ -149,12 +149,19 @@ keybindings for =outline-minor-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook
             (lambda ()
+              (local-set-key [C-tab] 'outline-cycle)
               (outline-minor-mode t)))
 
-  ;; (add-hook 'outline-minor-mode-hook
-  ;;           (lambda ()
-  ;;             (local-set-key (kbd "C-c C-o")
-  ;;                            outline-mode-prefix-map)))
+  (add-hook 'outline-minor-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c C-o")
+                             outline-mode-prefix-map)))
+
+
+  (defun ome-outline-magic-setup ()
+    (require 'outline-magic))
+
+  (ome-install 'outline-magic)
 
 #+END_SRC
 
