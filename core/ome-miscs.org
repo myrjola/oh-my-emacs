@@ -32,6 +32,7 @@ This file contains things that still don't find a good place to put, :-).
 | [[http://emacs-w3m.namazu.org/][emacs-w3m]]          | Recommended | Browsing HTML docs in Emacs.                       |
 | [[https://github.com/syohex/emacs-quickrun][quickrun]]           | Recommended | Just as its name said.                             |
 | [[http://www.eskimo.com/~seldon/diminish.el][diminish]]           | Recommended | Clean up mode line space.                          |
+| [[https://github.com/syohex/emacs-git-gutter-fringe][git-gutter-fringe]]  | Recommended | Fringe version of [[https://github.com/syohex/emacs-git-gutter][git-gutter.el]]                    |
 
 * Enable some dangerous commands
 
@@ -44,9 +45,9 @@ By default, the narrowing commands are considered to be dangerous, we just
 remove the dangerous tag here.
 
 #+BEGIN_SRC emacs-lisp
-  (put 'narrow-to-page 'disabled nil)
-  (put 'narrow-to-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 #+END_SRC
 * Toggle server mode .
   :PROPERTIES:
@@ -79,8 +80,8 @@ emacs if you use =(server-start)= while keeps emacs alive if you use
 
 #+NAME: random-number
 #+BEGIN_SRC emacs-lisp
-  ;; Seed the random-number generator
-  (random t)
+;; Seed the random-number generator
+(random t)
 #+END_SRC
 
 * Rainbow Delimiters
@@ -96,10 +97,10 @@ given depth."
 
 #+NAME: rainbow-delimiters
 #+BEGIN_SRC emacs-lisp
-  (defun ome-rainbow-delimiters-setup ()
-    (global-rainbow-delimiters-mode))
+(defun ome-rainbow-delimiters-setup ()
+  (global-rainbow-delimiters-mode))
 
-  (ome-install 'rainbow-delimiters)
+(ome-install 'rainbow-delimiters)
 #+END_SRC
 
 * Transparently Open Compressed Files
@@ -112,7 +113,7 @@ are automatically uncompressed for reading, and compressed when writing."
 
 #+NAME: auto-compression-mode
 #+BEGIN_SRC emacs-lisp
-  (auto-compression-mode t)
+(auto-compression-mode t)
 #+END_SRC
 
 * Allowing Opening Images
@@ -124,8 +125,9 @@ are automatically uncompressed for reading, and compressed when writing."
 
 #+NAME: auto-image-file-mode
 #+BEGIN_SRC emacs-lisp
-  (auto-image-file-mode t)
+(auto-image-file-mode t)
 #+END_SRC
+
 * Outline mode
   :PROPERTIES:
   :CUSTOM_ID: outline
@@ -270,6 +272,10 @@ VCS user interface written on top of it[1]".
 enjoyable. Of course there're other choices, but I prefer magit, view [[http://alexott.net/en/writings/emacs-vcs/EmacsGit.html][Alexott's
 Blog]] for technical details.
 
+There're a huge collection of magit commands which I can't remember at all,
+check the magit [[http://daemianmack.com/magit-cheatsheet.html][cheatsheet]] for details. The entry point to magit is
+=magit-status=, by default, ome bind "C-x g" to this command.
+
 #+NAME: magit
 #+BEGIN_SRC emacs-lisp
   (defun ome-magit-setup ()
@@ -277,6 +283,10 @@ Blog]] for technical details.
     (define-key evil-normal-state-map (kbd ",gh") 'magit-file-log) ; Commit history for current file
     (define-key evil-normal-state-map (kbd ",gb") 'magit-blame-mode) ; Blame for current file
     (define-key evil-normal-state-map (kbd ",gs") 'magit-status)
+    (add-hook 'git-rebase-mode-hook
+              (lambda ()
+                (evil-local-mode -1))))
+
     (defun magit-toggle-whitespace ()
       (interactive)
       (if (member "-w" magit-diff-options)
@@ -313,6 +323,58 @@ Blog]] for technical details.
 
   (if (executable-find "git")
       (ome-install 'magit))
+
+* git-gutter-fringe
+  :PROPERTIES:
+  :CUSTOM_ID: git-gutter-fringe
+  :END:
+
+[[https://github.com/syohex/emacs-git-gutter][git-gutter.el]] is a port of [[https://github.com/jisaacks/GitGutter][GitGutter]] which is a plugin of Sublime Text. It
+shows an icon in the gutter area indicating whether a line has been inserted,
+modified or deleted.
+
+The original [[https://github.com/syohex/emacs-git-gutter][git-gutter.el]] didn't work with linum-mode, so the author created a
+fringe version, called [[https://github.com/syohex/emacs-git-gutter-fringe][git-gutter-fringe.el]] which works with linux-mode. For
+detailed differences, check [[https://github.com/syohex/emacs-git-gutter][git-gutter.el]]'s [[https://github.com/syohex/emacs-git-gutter#git-gutterel-vs-git-gutter-fringeel][document]].
+
+[[https://github.com/syohex/emacs-git-gutter][git-gutter.el]] provides the following commands:
+- =git-gutter:next-hunk=
+- =git-gutter:previous-hunk=
+- =git-gutter:popup-hunk=, alias =git-gutter:popup-diff=
+- =git-gutter:stage-hunk=
+- =git-gutter:revert-hunk=
+- =git-gutter:clear=
+- =git-gutter:toggle=
+
+#+NAME: git-gutter-fringe
+#+BEGIN_SRC emacs-lisp
+(defun ome-git-gutter-fringe-setup ()
+  (dolist (mode-hook '(text-mode-hook prog-mode-hook))
+    (add-hook mode-hook
+              (lambda ()
+                ;; set fringe width to better display
+                (setq left-fringe-width 10)
+                (setq right-fringe-width 4))))
+
+  ;; some keybindings
+  (global-set-key (kbd "C-x v g") 'git-gutter:toggle)
+  (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+  ;; Jump to next/previous hunk
+  (global-set-key (kbd "C-x v p") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "C-x v n") 'git-gutter:next-hunk)
+  ;; Stage current hunk
+  (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+  ;; Revert current hunk
+  (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+  ;; improve performance
+  ;; (setq git-gutter:update-hooks '(after-save-hook after-revert-hook))
+
+  (require 'git-gutter-fringe)
+  (global-git-gutter-mode))
+
+(ome-install 'git-gutter-fringe)
+
 #+END_SRC
 
 * Visual-line-mode
@@ -331,7 +393,7 @@ of the time. But we still turn on it globally to make it a fallback when
 
 #+NAME: visual-line-mode
 #+BEGIN_SRC emacs-lisp
-  (global-visual-line-mode t)
+(global-visual-line-mode t)
 #+END_SRC
 
 * Projectile
@@ -376,7 +438,7 @@ just enjoy it!
     (define-key evil-normal-state-map (kbd ",pc") 'projectile-compile-project)
     (define-key evil-normal-state-map (kbd ",pt") 'projectile-regenerate-tags))
 
-  (ome-install 'projectile)
+(ome-install 'projectile)
 #+END_SRC
 
 * Smartparens
@@ -438,6 +500,19 @@ some time to master these wonderful commands, which will make your life easier.
     (setq sp-autoescape-string-quote t)
     (setq sp-navigate-close-if-unbalanced t)
     (smartparens-global-mode t)
+
+    ;; turn on smartparens-strict-mode on all lisp-like mode
+    (dolist (sp--lisp-mode-hook
+             (mapcar (lambda (x)
+                       (intern (concat (symbol-name x) "-hook")))
+                     sp--lisp-modes))
+      (add-hook sp--lisp-mode-hook
+                'smartparens-strict-mode)
+      ;; inferior-emacs-lisp-mode-hook is an alias of ielm-mode-hook
+      ;; and it will be overrided when you first start ielm
+      (add-hook 'ielm-mode-hook
+                'smartparens-strict-mode))
+
 
     ;; highlights matching pairs
     (show-smartparens-global-mode t)
@@ -619,8 +694,8 @@ Some commonly used keybindings for =w3m-mode=:
     (setq w3m-default-display-inline-images t)
     (global-set-key (kbd "C-x w") 'browse-url-at-point))
 
-  (when (executable-find "w3m")
-    (ome-install 'emacs-w3m))
+(when (executable-find "w3m")
+  (ome-install 'emacs-w3m))
 #+END_SRC
 
 * Quickrun
@@ -633,7 +708,7 @@ way. Just run it, without thinking about too much other chores.
 
 #+NAME: quickrun
 #+BEGIN_SRC emacs-lisp
-  (ome-install 'quickrun)
+(ome-install 'quickrun)
 #+END_SRC
 
 * Diminish
@@ -664,32 +739,35 @@ like.
 
 #+NAME: diminish
 #+BEGIN_SRC emacs-lisp
-  (defun ome-diminish-setup ()
-    ;; diminish some builtin mode
-    (eval-after-load "abbrev"
-      '(diminish 'abbrev-mode))
+(defun ome-diminish-setup ()
+  ;; diminish some builtin mode
+  (eval-after-load "abbrev"
+    '(diminish 'abbrev-mode))
 
-    (eval-after-load 'simple
-      '(progn
-         ;; diminish auto-fill-mode
-         (diminish 'auto-fill-function)
-         ;; https://github.com/xiaohanyu/oh-my-emacs/issues/36
-         (when (string< emacs-version "24.3.50")
-           (diminish 'global-visual-line-mode))
-         (diminish 'visual-line-mode)))
+  (eval-after-load 'simple
+    '(progn
+       ;; diminish auto-fill-mode
+       (diminish 'auto-fill-function)
+       ;; https://github.com/xiaohanyu/oh-my-emacs/issues/36
+       (when (string< emacs-version "24.3.50")
+         (diminish 'global-visual-line-mode))
+       (diminish 'visual-line-mode)))
 
-    (eval-after-load "outline"
-      '(diminish 'outline-minor-mode))
+  (eval-after-load "outline"
+    '(diminish 'outline-minor-mode))
 
-    (eval-after-load "eldoc"
-      '(diminish 'eldoc-mode))
+  (eval-after-load "eldoc"
+    '(diminish 'eldoc-mode))
 
-    ;; diminish third-party mode
-    (eval-after-load "elisp-slime-nav"
-      '(diminish 'elisp-slime-nav-mode))
+  ;; diminish third-party mode
+  (eval-after-load "elisp-slime-nav"
+    '(diminish 'elisp-slime-nav-mode))
 
-    (eval-after-load "helm"
-      '(diminish 'helm-mode))
+  (eval-after-load "helm"
+    '(diminish 'helm-mode))
+
+  (eval-after-load "projectile"
+    '(diminish 'projectile-mode "Prjl"))
 
     (eval-after-load "smartparens"
       '(diminish 'smartparens-mode))
@@ -709,7 +787,11 @@ like.
     (eval-after-load "undo-tree"
       '(diminish 'undo-tree-mode)))
 
-  (ome-install 'diminish)
+    (eval-after-load "git-gutter-fringe"
+      '(diminish 'git-gutter-mode)))
+
+
+(ome-install 'diminish)
 #+END_SRC
 
 * Howdoi
@@ -790,8 +872,6 @@ I use xmonad as my window manager, haskell-mode makes it easy to ensure correct 
   as =babel= or =gtranslate=?
 - Set emacs auto-save temporary dir instead of .emacs.d
 - Investigate how to use =imenu= and =imenu rescan=.
-- Add zencoding-mode(emmet-mode) to emacs, maybe I should propose an emmet
-  recipe to =el-get=.
 - Learn more about emacs mark and selection, why CapsLK turn on selection mode.
 - Integrate elnode, skewer-mode and emacs-request to emacs.
 - Write a proper major-mode for GAS assembly language.
@@ -816,5 +896,5 @@ I use xmonad as my window manager, haskell-mode makes it easy to ensure correct 
   buffer?
 - Add realtime dictionary support for emacs.
 
-* Footnotes
+
 [1] See [[http://git-scm.com/book/en/Git-Internals][Git Internals]] to technical details.

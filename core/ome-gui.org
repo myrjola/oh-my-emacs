@@ -87,13 +87,13 @@ Of course you can overrides this convention as you like, oh-my-emacs is just a
 starting point.
 
 #+BEGIN_SRC emacs-lisp
-  ;; http://www.emacswiki.org/emacs/FullScreen
-  (defun ome-toggle-fullscreen ()
-    "Toggle full screen"
-    (interactive)
-    (set-frame-parameter
-     nil 'fullscreen
-     (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+;; http://www.emacswiki.org/emacs/FullScreen
+(defun ome-toggle-fullscreen ()
+  "Toggle full screen"
+  (interactive)
+  (set-frame-parameter
+   nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
   (global-set-key (kbd "<f11>") 'ome-toggle-fullscreen)
 #+END_SRC
@@ -106,6 +106,7 @@ starting point.
 [[http://ethanschoonover.com/solarized][Solarized]] is my favourite color theme. it is available for multiple
 applications, not only for emacs. I'll set this as the default theme for
 oh-my-emacs.
+
 #+NAME: color-theme
 #+BEGIN_SRC emacs-lisp
   (defun ome-solarized-emacs-setup ()
@@ -115,6 +116,15 @@ oh-my-emacs.
 
   (ome-install 'solarized-emacs)
 #+END_SRC
+
+** Q&A
+
+Q: How to change the default solarized color theme for ome?
+
+A: Just [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][untangle]]
+the related code block by convert =#+BEGIN_SRC emacs-lisp= to =#+BEGIN_SRC
+emacs-lisp :tangle no=, and choose any color-theme as you like. Check github
+[[https://github.com/xiaohanyu/oh-my-emacs/issues/58][issue]] for detailed discussion.
 
 * Powerline
   :PROPERTIES:
@@ -126,11 +136,12 @@ inspired by [[https://github.com/Lokaltog/vim-powerline][vim-powerline]]. There'
 
 #+NAME: powerline
 #+BEGIN_SRC emacs-lisp
-  (defun ome-powerline-setup ()
-    (powerline-default-theme))
+(defun ome-powerline-setup ()
+  (powerline-default-theme))
 
-  (ome-install 'powerline)
+(ome-install 'powerline)
 #+END_SRC
+
 * Yascroll
   :PROPERTIES:
   :CUSTOM_ID: yascroll
@@ -143,7 +154,7 @@ inspired by [[https://github.com/Lokaltog/vim-powerline][vim-powerline]]. There'
   (defun ome-yascroll-setup ()
     (global-yascroll-bar-mode 1))
 
-  (ome-install 'yascroll)
+(ome-install 'yascroll)
 #+END_SRC
 
 * Linum-relative
@@ -157,10 +168,10 @@ I made it a default for oh-my-emacs.
 
 #+NAME: linum-relative
 #+BEGIN_SRC emacs-lisp
-  (defun ome-linum-relative-setup ()
-    (require 'linum-relative))
+(defun ome-linum-relative-setup ()
+  (require 'linum-relative))
 
-  (ome-install 'linum-relative)
+(ome-install 'linum-relative)
 #+END_SRC
 
 * Todo
@@ -174,9 +185,3 @@ I made it a default for oh-my-emacs.
   - https://github.com/chriskempson/tomorrow-theme
   - https://github.com/chriskempson/base16
   - https://github.com/hbin/molokai-theme
-
-** Scrollbar
-- Smooth scrolling?
-
-** Minimap
-- Currently, none of the minimap projects works the way I want it to.

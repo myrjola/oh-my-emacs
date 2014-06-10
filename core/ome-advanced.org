@@ -14,10 +14,11 @@ before loading this file.
 
 #+NAME: advanced-prerequisites
 #+CAPTION: Prerequisites for ome-advanced module
-|          | Windows | Ubuntu/Debian/Mint        | ArchLinux                    | Fedora      | Mac OS X | Mandatory? |
-|----------+---------+---------------------------+------------------------------+-------------+----------+------------|
-| [[http://www.tug.org/texlive/][texlive]]  |         | texlive-full latex-beamer | texlive-most texlive-langcjk | texlive-all |          | Yes        |
-| [[http://beyondgrep.com/][ack-grep]] | ack     | ack-grep                  | ack                          | ack         | ack      | No         |
+|          | Windows | Ubuntu/Debian/Mint        | ArchLinux                    | Fedora              | Mac OS X            | Mandatory? |
+|----------+---------+---------------------------+------------------------------+---------------------+---------------------+------------|
+| [[http://www.tug.org/texlive/][texlive]]  |         | texlive-full latex-beamer | texlive-most texlive-langcjk | texlive-all         |                     | Yes        |
+| [[http://beyondgrep.com/][ack-grep]] | ack     | ack-grep                  | ack                          | ack                 | ack                 | No         |
+| [[https://github.com/ggreer/the_silver_searcher][ag]]       |         | the_silver_searcher       | the_silver_searcher          | the_silver_searcher | the_silver_searcher | No         |
 
 Notes:
 - [[http://www.tug.org/texlive/][texlive]] is required by evil, since evil need =texi2pdf= to =make
@@ -136,6 +137,11 @@ Emacs session.
     (define-key evil-normal-state-map (kbd ",<") 'next-error)
     (define-key evil-normal-state-map (kbd ",>") 'previous-error)
 
+    (eval-after-load "git-gutter-mode"
+      (define-key evil-normal-state-map (kbd ",a") 'git-gutter:stage-hunk)
+      (define-key evil-normal-state-map (kbd ",n") 'git-gutter:next-hunk)
+      (define-key evil-normal-state-map (kbd ",p") 'git-gutter:previous-hunk))
+
     ;; Misc mappings
     (define-key evil-normal-state-map (kbd ",xx") 'er/expand-region)
     (define-key evil-normal-state-map (kbd ",k") 'kill-buffer)
@@ -143,7 +149,7 @@ Emacs session.
     ;; Indent region in visual-mode with tab
     (define-key evil-visual-state-map (kbd "<tab>") 'indent-region))
 
-  (ome-install 'evil)
+(ome-install 'evil)
 #+END_SRC
 
 * Evil-nerd-commenter
@@ -177,7 +183,7 @@ almost the same.
 
 #+NAME: evil-surround
 #+BEGIN_SRC emacs-lisp
-  (ome-install 'evil-surround)
+(ome-install 'evil-surround)
 #+END_SRC
 
 * Expand-region
@@ -213,7 +219,7 @@ Just try it and you will love it.
     (global-set-key (kbd "C-=") 'er/expand-region)
     (setq expand-region-contract-fast-key "z"))
 
-  (ome-install 'expand-region)
+(ome-install 'expand-region)
 #+END_SRC
 
 * Ace-jump-mode
@@ -241,10 +247,10 @@ By default, =<Leader>= is =<SPC>=, so you can use =<SPC> c= to activate
 #+BEGIN_SRC emacs-lisp
   (defun ome-ace-jump-mode-setup ()
     (when (featurep 'evil)
-      (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
-      (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-char-mode)))
+      (define-key evil-normal-state-map (kbd ",aw") 'ace-jump-word-mode)
+      (define-key evil-normal-state-map (kbd ",ac") 'ace-jump-char-mode)))
 
-  (ome-install 'ace-jump-mode)
+(ome-install 'ace-jump-mode)
 #+END_SRC
 
 * Ack-and-a-half
@@ -266,22 +272,34 @@ you'll get all you need. Enjoy it.
 
 #+NAME: ack-and-a-half
 #+BEGIN_SRC emacs-lisp
-  (when (or (executable-find "ack") (executable-find "ack-grep"))
-    (ome-install 'ack-and-a-half))
+(when (or (executable-find "ack") (executable-find "ack-grep"))
+  (ome-install 'ack-and-a-half))
+#+END_SRC
 
-  (when (executable-find "ag")
-    (ome-install 'ag))
+* ag
+  :PROPERTIES:
+  :CUSTOM_ID: ag
+  :END:
+
+ag, [[https://github.com/ggreer/the_silver_searcher][the silver searcher]], a code searching tool similar to [[http://beyondgrep.com/][ack]] but much more
+faster. It searches code abot 3-5x faster than ack, and "The command name is
+33% shorter than ack, and all keys are on the home row!". I've used it for
+serveral months and it's amazing.
+
+[[https://github.com/bbatsov/projectile][Projectile]] has builtin support for ag(=projectile-ag=) via =C-c p A=.
+
+#+NAME: ag
+#+BEGIN_SRC emacs-lisp
+(when (executable-find "ag")
+  (ome-install 'ag))
 #+END_SRC
 
 * Todo
 *** Evil mode
-- I only enable =evil-local-mode= for =text-mode= and =prog-mode=, but I don't
-  know why =evil-local-mode= is enabled for =magit-log-mode= by default and
-  shadowed a lot of =magit= keybindings?
 - Evil has some conflicts with smartparens due to cursor position. I should
   temporarily disable =evil-local-mode= when I do operations like
   =sp-up-sexp=. Maybe I can get this by =post-command-hook= or smartparens's
   =post-command-handler=? Or just use =defadvice=?
 
-* Footnotes
+
 [1] See [[http://vimgolf.com/][vimgolf]] for funny things.

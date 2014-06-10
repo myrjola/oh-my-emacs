@@ -59,16 +59,16 @@ to =$HOME/.emacs.d/init.el=:
 
 #+NAME: org-mode-upgrade
 #+BEGIN_SRC emacs-lisp :tangle no
-  (defun ome-org-mode-setup ()
-    ;; markdown export support
-    (require 'ox-md))
+(defun ome-org-mode-setup ()
+  ;; markdown export support
+  (require 'ox-md))
 
-  (add-to-list 'el-get-sources
-               '(:name org-mode
-                       :after (progn
-                                (ome-org-mode-setup))))
+(add-to-list 'el-get-sources
+             '(:name org-mode
+                     :after (progn
+                              (ome-org-mode-setup))))
 
-  (el-get 'sync (mapcar 'el-get-source-name el-get-sources))
+(el-get 'sync (mapcar 'el-get-source-name el-get-sources))
 #+END_SRC
 
 * Keybindings
@@ -147,8 +147,35 @@ contains an up to date list of the currently supported languages.
 
 You are encouraged to add the following to your personal configuration
 although it is not added by default as a security precaution.
+
 #+BEGIN_SRC emacs-lisp
-  (setq org-confirm-babel-evaluate nil)
+(setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+Use =C-c '= to edit the current code block. This brings up a language
+major-mode edit buffer containing the body of the code block. Manually saving
+this buffer with =<C-x C-s>= will write the contents back to the Org
+buffer. You can also set =org-edit-src-auto-save-idle-delay= to save the base
+buffer after some idle delay, or org-edit-src-turn-on-auto-save to auto-save
+this buffer into a separate file using auto-save-mode. Use =C-c '= again to
+exit.
+
+Since ome adopts [[https://gitorious.org/evil/pages/Home][evil]], there's a small annoyance with =org-src-mode=. Just like
+other modes, you can type =C-x C-s= (which binds to =org-edit-src-save= in
+=org-src-mode= to save your commits), however, typing =:w= (which binds to
+=evil-write=) will cause an error since there's no real file that associates
+with the current =org-src-mode=. So we have to do some hack to bind =:w= to
+=org-edit-src-save=. Check this [[https://bitbucket.org/lyro/evil/issue/399/issues-with-org-src-mode][bitbucket issue ]]for detailed discussion.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-edit-src-auto-save-idle-delay 5)
+(setq org-edit-src-content-indentation 0)
+
+(add-hook 'org-src-mode-hook
+          (lambda ()
+            (make-local-variable 'evil-ex-commands)
+            (setq evil-ex-commands (copy-list evil-ex-commands))
+            (evil-ex-define-cmd "w[rite]" 'org-edit-src-save)))
 #+END_SRC
 
 * Code block fontification
@@ -163,8 +190,8 @@ much more like reading and editing of code using its major mode.
 
 #+NAME: code-block-fontification
 #+BEGIN_SRC emacs-lisp
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
 #+END_SRC
 
 * The Library of Babel
@@ -203,18 +230,18 @@ code block, which may be a bug of =rainbow-delimiters-mode=.
 
 #+NAME: htmlize
 #+BEGIN_SRC emacs-lisp
-  (defadvice htmlize-buffer-1 (around ome-htmlize-buffer-1 disable)
-    (rainbow-delimiters-mode -1)
-    ad-do-it
-    (rainbow-delimiters-mode t))
+(defadvice htmlize-buffer-1 (around ome-htmlize-buffer-1 disable)
+  (rainbow-delimiters-mode -1)
+  ad-do-it
+  (rainbow-delimiters-mode t))
 
-  (defun ome-htmlize-setup ()
-    (if (el-get-read-package-status 'rainbow-delimiters)
-        (progn
-          (ad-enable-advice 'htmlize-buffer-1 'around 'ome-htmlize-buffer-1)
-          (ad-activate 'htmlize-buffer-1))))
+(defun ome-htmlize-setup ()
+  (if (el-get-read-package-status 'rainbow-delimiters)
+      (progn
+        (ad-enable-advice 'htmlize-buffer-1 'around 'ome-htmlize-buffer-1)
+        (ad-activate 'htmlize-buffer-1))))
 
-  (ome-install 'htmlize)
+(ome-install 'htmlize)
 #+END_SRC
 
 * Org-LaTeX
@@ -235,11 +262,13 @@ still use org-mode 7.x, you may need to [[http://orgmode.org/worg/org-tutorials/
 
 #+NAME: org-latex
 #+BEGIN_SRC emacs-lisp
-  ;; code snippet comes from
-  ;; http://joat-programmer.blogspot.com/2013/07/org-mode-version-8-and-pdf-export-with.html
-  ;; Include the latex-exporter
-  ;; check whether org-mode 8.x is available
-  (when (require 'ox-latex nil 'noerror)
+;; code snippet comes from
+;; http://joat-programmer.blogspot.com/2013/07/org-mode-version-8-and-pdf-export-with.html
+;; Include the latex-exporter
+;; check whether org-mode 8.x is available
+(when (require 'ox-latex nil 'noerror)
+  ;; You need to install pygments to use minted
+  (when (executable-find "pygmentize")
     ;; Add minted to the defaults packages to include when exporting.
     (add-to-list 'org-latex-packages-alist '("" "minted"))
     ;; Tell the latex export to use the minted package for source
@@ -248,8 +277,14 @@ still use org-mode 7.x, you may need to [[http://orgmode.org/worg/org-tutorials/
     ;; Let the exporter use the -shell-escape option to let latex
     ;; execute external programs.
     ;; This obviously and can be dangerous to activate!
+    (setq org-latex-minted-options
+          '(("mathescape" "true")
+            ("linenos" "true")
+            ("numbersep" "5pt")
+            ("frame" "lines")
+            ("framesep" "2mm")))
     (setq org-latex-pdf-process
-          '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
+          '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))))
 #+END_SRC
 
 * Org-CDLaTeX

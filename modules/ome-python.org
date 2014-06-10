@@ -113,9 +113,8 @@ make auto-complete unoperative when you try to complete function arguments with
 day to trace this problem and finally find here. So I use =(elpy-enable t)=
 instead. Please =C-h f elpy-enable RET= to get details.
 
-Note: currently, =virtualenv.el=, one of the dependencies of elpy, still has
-some [[https://github.com/jorgenschaefer/elpy/issues/144][problems]], the author of =elpy= is considering to replace =virtualenv.el=
-with his newly-written =pyvenv.el=, see [[https://github.com/jorgenschaefer/elpy/issues/149][here]] for details.
+From version 1.3, elpy replaced [[https://github.com/aculich/virtualenv.el][virtualenv.el]] with [[https://github.com/jorgenschaefer/pyvenv][pyvenv]], see [[https://github.com/jorgenschaefer/elpy/issues/149][here]] for
+details.
 
 Also, elpy integrates with [[http://nose.readthedocs.org/en/latest/][nosetests]], =C-c C-t= will run nose on your
 project. So you should =pip install nose= if you want to use nosetests with
@@ -123,20 +122,22 @@ elpy.
 
 #+NAME: elpy
 #+BEGIN_SRC emacs-lisp
-  (when (version< emacs-version "24.3")
-    (ome-install 'python24))
+(when (version< emacs-version "24.3")
+  (ome-install 'python24))
 
-  (defun ome-elpy-setup ()
-    (elpy-enable t)
-    (setq elpy-rpc-backend "jedi")
-    (when (executable-find "ipython")
-      (elpy-use-ipython))
-    (when (el-get-package-installed-p 'flycheck)
-      (setq elpy-default-minor-modes
-            (remove 'flymake-mode
-                    elpy-default-minor-modes)))
-    (define-key python-mode-map (kbd "RET")
-      'newline-and-indent))
+(defun ome-elpy-setup ()
+  (elpy-enable t)
+  (setq elpy-rpc-backend "jedi")
+  (when (executable-find "ipython")
+    (elpy-use-ipython))
+  (when (el-get-package-installed-p 'flycheck)
+    (setq elpy-default-minor-modes
+          (remove 'flymake-mode
+                  elpy-default-minor-modes)))
+  (define-key python-mode-map (kbd "RET")
+    'newline-and-indent)
+  (add-hook 'python-mode-hook
+            (lambda () (set (make-local-variable 'comment-inline-offset) 2))))
 
   (ome-install 'pyvenv)
   (ome-install 'elpy)
@@ -172,7 +173,7 @@ Some python web frameworks often provide a =*.wsgi= file to application
 initialization, which is just a plain python file.
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))
 #+END_SRC
 
 * Todo
@@ -183,7 +184,7 @@ initialization, which is just a plain python file.
   https://github.com/monsanto/readline-complete.el is the ultimate solution
   for REPL languages.
 
-* Footnotes
+
 [1] See [[http://www.jesshamrick.com/2012/09/18/emacs-as-a-python-ide/][here]], [[http://caisah.info/emacs-for-python/][here]], [[http://pedrokroger.net/2010/07/configuring-emacs-as-a-python-ide-2/][here]], [[http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/][here]], and [[http://www.enigmacurry.com/2008/05/09/emacs-as-a-powerful-python-ide/][here]].
 [2] =pip install pkg= with root can make =pkg= accessible in newly created
 virtualenvs.

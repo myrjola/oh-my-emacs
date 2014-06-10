@@ -27,7 +27,6 @@ This file contains some packages for document writing.
 |---------------+----------+------------------------------------------------------|
 | [[http://jblevins.org/projects/markdown-mode/][markdown-mode]] | Required | Markdown is so popular that this package is required |
 
-
 * Markdown
   :PROPERTIES:
   :CUSTOM_ID: markdown
@@ -50,11 +49,11 @@ economics at the ohio state university, who maintains a lot of open source
 
 #+NAME: markdown
 #+BEGIN_SRC emacs-lisp
-  (defun ome-markdown-mode-setup ()
-    (add-to-list 'auto-mode-alist
-                 '("\\.mdpp" . markdown-mode)))
+(defun ome-markdown-mode-setup ()
+  (add-to-list 'auto-mode-alist
+               '("\\.mdpp" . markdown-mode)))
 
-  (ome-install 'markdown-mode)
+(ome-install 'markdown-mode)
 #+END_SRC
 
 * Todo
