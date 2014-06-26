@@ -285,7 +285,7 @@ check the magit [[http://daemianmack.com/magit-cheatsheet.html][cheatsheet]] for
     (define-key evil-normal-state-map (kbd ",gs") 'magit-status)
     (add-hook 'git-rebase-mode-hook
               (lambda ()
-                (evil-local-mode -1))))
+                (evil-local-mode -1)))
 
     (defun magit-toggle-whitespace ()
       (interactive)
@@ -318,11 +318,12 @@ check the magit [[http://daemianmack.com/magit-cheatsheet.html][cheatsheet]] for
 
     (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
-
     (define-key magit-status-mode-map (kbd "W") 'magit-toggle-whitespace))
 
   (if (executable-find "git")
       (ome-install 'magit))
+
+#+END_SRC
 
 * git-gutter-fringe
   :PROPERTIES:
