@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: autopick
+# key: ap
+# --
+[C][alpha][beta][${1:mercury-5.2}] $0

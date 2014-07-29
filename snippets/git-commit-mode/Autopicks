@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Autopicks
-# key: ap
-# binding: direct-keybinding
-# --
-[alpha][beta][Mercury-5.1] $0
