@@ -285,7 +285,7 @@ check the magit [[http://daemianmack.com/magit-cheatsheet.html][cheatsheet]] for
     (define-key evil-normal-state-map (kbd ",gs") 'magit-status)
     (add-hook 'git-rebase-mode-hook
               (lambda ()
-                (evil-local-mode -1))))
+                (evil-local-mode -1)))
 
     (defun magit-toggle-whitespace ()
       (interactive)
@@ -431,6 +431,7 @@ just enjoy it!
   (defun ome-projectile-setup ()
     (projectile-global-mode)
     (setq projectile-enable-caching t)
+    (setq projectile-switch-project-action 'helm-projectile)
     (global-set-key (kbd "C-x c h") 'helm-projectile)
     (define-key evil-normal-state-map (kbd ",ps") 'projectile-switch-project)
     (define-key evil-normal-state-map (kbd ",pa") 'projectile-ag)
@@ -786,7 +787,7 @@ like.
       '(diminish 'magit-auto-revert-mode))
 
     (eval-after-load "undo-tree"
-      '(diminish 'undo-tree-mode)))
+      '(diminish 'undo-tree-mode))
 
     (eval-after-load "git-gutter-fringe"
       '(diminish 'git-gutter-mode)))
