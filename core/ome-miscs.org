@@ -867,6 +867,15 @@ I use xmonad as my window manager, haskell-mode makes it easy to ensure correct 
 
 #+end_src
 
+* QML-files
+
+#+begin_src emacs-lisp
+    (defun ome-qml-mode-setup ()
+      (require 'qml-mode)
+      (add-to-list 'auto-mode-alist '("\\.qml\\'" . qml-mode)))
+
+    (ome-install 'qml-mode)
+#+end_src
 
 * Todo
 - Enable flyspell and ispell in text-mode.
