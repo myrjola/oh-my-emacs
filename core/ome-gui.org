@@ -130,20 +130,18 @@ the related code block by convert =#+BEGIN_SRC emacs-lisp= to =#+BEGIN_SRC
 emacs-lisp :tangle no=, and choose any color-theme as you like. Check github
 [[https://github.com/xiaohanyu/oh-my-emacs/issues/58][issue]] for detailed discussion.
 
-* Powerline
+* Smart mode line
   :PROPERTIES:
   :CUSTOM_ID: powerline
   :END:
 
-Powerline is an eye candy for emacs [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Mode-Line.html][mode line]]. Actually, the [[https://github.com/milkypostman/powerline][emacs powerline]] is
-inspired by [[https://github.com/Lokaltog/vim-powerline][vim-powerline]]. There're also powerline variants for [[https://github.com/erikw/tmux-powerline][tmux]], [[https://github.com/milkbikis/powerline-shell][shell]], etc.
 
-#+NAME: powerline
 #+BEGIN_SRC emacs-lisp
-(defun ome-powerline-setup ()
-  (powerline-default-theme))
+(defun ome-smart-mode-line-setup ()
+  (sml/setup)
+  (sml/apply-theme 'automatic))
 
-(ome-install 'powerline)
+(ome-install 'smart-mode-line)
 #+END_SRC
 
 * Yascroll
