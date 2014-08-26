@@ -1,21 +1,7 @@
-;;; init.el --- Where all the magic begins
-;;
-;; Part of the oh-my-emacs
-;;
-;; This is the first thing to get loaded.
-;;
-
-;; Enter debugger if an error is signaled during Emacs startup.
-;;
-;; This works the same as you boot emacs with "--debug-init" every time, except
-;; for errors in "init.el" itself, which means, if there's an error in
-;; "init.el", "emacs --debug-init" will entering the debugger, while "emacs"
-;; will not; however, if there's an error in other files loaded by init.el,
-;; both "emacs" and "emacs --debug-init" will entering the debugger. I don't
-;; know why.
 (setq debug-on-error t)
 
 ;; believe me, you don't need menubar, toolbar nor scrollbar
+
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
 
