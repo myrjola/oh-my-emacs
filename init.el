@@ -14,6 +14,10 @@
     (if (featurep package)
         (require package))))
 
+;; use-package is awesome! https://github.com/jwiegley/use-package
+(package-safe-install 'use-package)
+(require 'use-package)
+
 (setf user-full-name "Martin Yrjölä")
 (setf user-mail-address "martin.yrjola@gmail.com")
 
@@ -122,16 +126,14 @@
       ispell-extra-args '("--sug-mode=ultra"))
 
 ;; On-the-fly syntax checking
-(package-safe-install 'flycheck 'flycheck-ledger)
-(add-hook 'prog-mode-hook 'flycheck-mode)
+(use-package flycheck :ensure
+  :init
+  (add-hook 'prog-mode-hook 'flycheck-mode))
+(use-package flycheck-ledger :ensure)
 
 ;; show column number and line number
 (dolist (mode '(column-number-mode line-number-mode))
   (when (fboundp mode) (funcall mode t)))
-
-;; Hide scroll-bars
-(scroll-bar-mode -1)
-(horizontal-scroll-bar-mode -1)
 
 ;; Toggle line highlighting in all buffers except org-mode because linum can't
 ;; handle big files that well
@@ -174,14 +176,19 @@
 (if (equal window-system 'x) (setq x-underline-at-descent-line t) ())
 
 ;; Smart modeline
-(package-safe-install 'smart-mode-line)
-(sml/setup)
-(sml/apply-theme 'automatic)
+(use-package smart-mode-line
+  :ensure
+  :init
+  (progn
+    (sml/setup)
+    (sml/apply-theme 'automatic)))
 
 ;; Relative line numbering
-(package-safe-install 'linum-relative)
-(require 'linum-relative)
-(setq linum-relative-current-symbol "")
+(use-package 'linum-relative
+  :ensure
+  :init
+  // Show current line instead of 0
+  (setq linum-relative-current-symbol ""))
 
 (package-safe-install 'evil)
 (require 'evil)
@@ -192,19 +199,6 @@
 ;; Don't quit beacause of old habits
 (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
 (evil-ex-define-cmd "wq" (message "quit disabled"))
-
-;; Take vim's window management features
-(global-unset-key (kbd "C-w"))
-(global-set-key (kbd "C-w C-w") 'evil-window-prev)
-(global-set-key (kbd "C-w C-j") 'evil-window-down)
-(global-set-key (kbd "C-w C-k") 'evil-window-up)
-(global-set-key (kbd "C-w C-h") 'evil-window-left)
-(global-set-key (kbd "C-w C-l") 'evil-window-right)
-(global-set-key (kbd "C-w w") 'evil-window-prev)
-(global-set-key (kbd "C-w j") 'evil-window-down)
-(global-set-key (kbd "C-w k") 'evil-window-up)
-(global-set-key (kbd "C-w h") 'evil-window-left)
-(global-set-key (kbd "C-w l") 'evil-window-right)
 
 ;; Don't wait for any other keys after escape is pressed.
 (setq evil-esc-delay 0)
@@ -257,4 +251,4 @@
 (package-safe-install 'evil-numbers)
 (package-safe-install 'evil-god-state)
 
-(package-safe-install )
+(package-safe-install 'ag)

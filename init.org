@@ -2,196 +2,203 @@
 
 * Boilerplate and fundamental settings
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 
-;; believe me, you don't need menubar, toolbar nor scrollbar
-(dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
-  (when (fboundp mode) (funcall mode -1)))
+  ;; believe me, you don't need menubar, toolbar nor scrollbar
+  (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
+    (when (fboundp mode) (funcall mode -1)))
 
-(package-initialize)
-(add-to-list 'package-archives
- '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-initialize)
+  (add-to-list 'package-archives
+   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-(defun package-safe-install (&rest packages)
-  (dolist (package packages)
-    (unless (package-installed-p package)
-      (package-install package))
-    (if (featurep package)
-        (require package))))
+  (defun package-safe-install (&rest packages)
+    (dolist (package packages)
+      (unless (package-installed-p package)
+        (package-install package))
+      (if (featurep package)
+          (require package))))
 
-(setf user-full-name "Martin Yrjölä")
-(setf user-mail-address "martin.yrjola@gmail.com")
+  ;; use-package is awesome! https://github.com/jwiegley/use-package
+  (package-safe-install 'use-package)
+  (require 'use-package)
 
-(setf custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+  (setf user-full-name "Martin Yrjölä")
+  (setf user-mail-address "martin.yrjola@gmail.com")
 
-(setf hostname
-      (with-temp-buffer
-        (call-process "hostname" nil t)
-        (let ((hostname* (buffer-string)))
-          (while (string-match "[\r\n\t ]+" hostname*)
-            (setq hostname* (replace-match "" t t hostname*)))
-          hostname*)))
+  (setf custom-file "~/.emacs.d/custom.el")
+  (load custom-file)
 
-(setf inhibit-startup-screen t
-      inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
+  (setf hostname
+        (with-temp-buffer
+          (call-process "hostname" nil t)
+          (let ((hostname* (buffer-string)))
+            (while (string-match "[\r\n\t ]+" hostname*)
+              (setq hostname* (replace-match "" t t hostname*)))
+            hostname*)))
 
-;; fix the mac PATH variable
-(defun ome-set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
+  (setf inhibit-startup-screen t
+        inhibit-startup-message t
+        inhibit-startup-echo-area-message t)
 
-(when (eq system-type 'darwin)
-  (when window-system (ome-set-exec-path-from-shell-PATH)))
+  ;; fix the mac PATH variable
+  (defun ome-set-exec-path-from-shell-PATH ()
+    (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
+      (setenv "PATH" path-from-shell)
+      (setq exec-path (split-string path-from-shell path-separator))))
 
-;; set backup-directory
-(setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
-      backup-by-copying t
-      version-control t
-      kept-old-versions 2
-      kept-new-versions 20
-      delete-old-versions t)
-(setq tramp-backup-directory-alist backup-directory-alist)
-(setq auto-save-file-name-transforms nil)
+  (when (eq system-type 'darwin)
+    (when window-system (ome-set-exec-path-from-shell-PATH)))
 
-;; set environment coding system
-(set-language-environment "UTF-8")
-;; auto revert buffer globally
-(global-auto-revert-mode t)
-;; set TAB and indention
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-;; y or n is suffice for a yes or no question
-(fset 'yes-or-no-p 'y-or-n-p)
-;; always add new line to the end of a file
-(setq require-final-newline t)
-;; add no new lines when "arrow-down key" at the end of a buffer
-(setq next-line-add-newlines nil)
-;; prevent the annoying beep on errors
-(setq ring-bell-function 'ignore)
-;; remove trailing whitespaces before save
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; enable to support navigate in camelCase words
-(global-subword-mode t)
+  ;; set backup-directory
+  (setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
+        backup-by-copying t
+        version-control t
+        kept-old-versions 2
+        kept-new-versions 20
+        delete-old-versions t)
+  (setq tramp-backup-directory-alist backup-directory-alist)
+  (setq auto-save-file-name-transforms nil)
 
-;; shell-mode settings
-(unless (eq system-type 'windows-nt)
-  (setq explicit-shell-file-name "/bin/bash")
-  (setq shell-file-name "/bin/bash"))
-;; always insert at the bottom
-(setq comint-scroll-to-bottom-on-input t)
-;; no duplicates in command history
-(setq comint-input-ignoredups t)
-;; what to run when i press enter on a line above the current prompt
-(setq comint-get-old-input (lambda () ""))
-;; max shell history size
-(setq comint-input-ring-size 1000)
-;; show all in emacs interactive output
-(setenv "PAGER" "cat")
-;; set lang to enable Chinese display in shell-mode
-(setenv "LANG" "en_US.UTF-8")
+  ;; set environment coding system
+  (set-language-environment "UTF-8")
+  ;; auto revert buffer globally
+  (global-auto-revert-mode t)
+  ;; set TAB and indention
+  (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil)
+  ;; y or n is suffice for a yes or no question
+  (fset 'yes-or-no-p 'y-or-n-p)
+  ;; always add new line to the end of a file
+  (setq require-final-newline t)
+  ;; add no new lines when "arrow-down key" at the end of a buffer
+  (setq next-line-add-newlines nil)
+  ;; prevent the annoying beep on errors
+  (setq ring-bell-function 'ignore)
+  ;; remove trailing whitespaces before save
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  ;; enable to support navigate in camelCase words
+  (global-subword-mode t)
 
-;; set text-mode as the default major mode, instead of fundamental-mode
-;; The first of the two lines in parentheses tells Emacs to turn on Text mode
-;; when you find a file, unless that file should go into some other mode, such
-;; as C mode.
-(setq-default major-mode 'text-mode)
+  ;; shell-mode settings
+  (unless (eq system-type 'windows-nt)
+    (setq explicit-shell-file-name "/bin/bash")
+    (setq shell-file-name "/bin/bash"))
+  ;; always insert at the bottom
+  (setq comint-scroll-to-bottom-on-input t)
+  ;; no duplicates in command history
+  (setq comint-input-ignoredups t)
+  ;; what to run when i press enter on a line above the current prompt
+  (setq comint-get-old-input (lambda () ""))
+  ;; max shell history size
+  (setq comint-input-ring-size 1000)
+  ;; show all in emacs interactive output
+  (setenv "PAGER" "cat")
+  ;; set lang to enable Chinese display in shell-mode
+  (setenv "LANG" "en_US.UTF-8")
 
-;; Max 80 chars per column
-(setq-default fill-column 80)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'prog-mode-hook 'turn-on-auto-fill)
+  ;; set text-mode as the default major mode, instead of fundamental-mode
+  ;; The first of the two lines in parentheses tells Emacs to turn on Text mode
+  ;; when you find a file, unless that file should go into some other mode, such
+  ;; as C mode.
+  (setq-default major-mode 'text-mode)
 
-;; When you visit a file, point goes to the last place where it was when you
-;; previously visited the same file.
-(setq-default save-place t)
-(setq save-place-file (concat user-emacs-directory ".saved-places"))
-(require 'saveplace)
+  ;; Max 80 chars per column
+  (setq-default fill-column 80)
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'prog-mode-hook 'turn-on-auto-fill)
+
+  ;; When you visit a file, point goes to the last place where it was when you
+  ;; previously visited the same file.
+  (setq-default save-place t)
+  (setq save-place-file (concat user-emacs-directory ".saved-places"))
+  (require 'saveplace)
 
 
-;; Enable recent files mode.
-(require 'recentf)
-(recentf-mode t)
+  ;; Enable recent files mode.
+  (require 'recentf)
+  (recentf-mode t)
 
-;; 50 files ought to be enough.
-(setq recentf-max-saved-items 50)
+  ;; 50 files ought to be enough.
+  (setq recentf-max-saved-items 50)
 
-;; No more <1> <2> after buffer names
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-(require 'uniquify)
+  ;; No more <1> <2> after buffer names
+  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (require 'uniquify)
 
-;; use aspell instead of ispell
-(setq ispell-program-name "aspell"
-      ispell-extra-args '("--sug-mode=ultra"))
+  ;; use aspell instead of ispell
+  (setq ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra"))
 
-;; On-the-fly syntax checking
-(package-safe-install 'flycheck 'flycheck-ledger)
-(add-hook 'prog-mode-hook 'flycheck-mode)
+  ;; On-the-fly syntax checking
+  (use-package flycheck :ensure
+    :init
+    (add-hook 'prog-mode-hook 'flycheck-mode))
+  (use-package flycheck-ledger :ensure)
 
-#+END_SRC
+#+end_src
 
 * GUI settings
 
 #+begin_src emacs-lisp
-;; show column number and line number
-(dolist (mode '(column-number-mode line-number-mode))
-  (when (fboundp mode) (funcall mode t)))
+  ;; show column number and line number
+  (dolist (mode '(column-number-mode line-number-mode))
+    (when (fboundp mode) (funcall mode t)))
 
-;; Hide scroll-bars
-(scroll-bar-mode -1)
-(horizontal-scroll-bar-mode -1)
+  ;; Toggle line highlighting in all buffers except org-mode because linum can't
+  ;; handle big files that well
+  (global-linum-mode t)
+  (add-hook 'org-mode-hook (lambda () (linum-mode 0)))
 
-;; Toggle line highlighting in all buffers except org-mode because linum can't
-;; handle big files that well
-(global-linum-mode t)
-(add-hook 'org-mode-hook (lambda () (linum-mode 0)))
+  ;; Toggle line highlighting in all buffers
+  (global-hl-line-mode t)
 
-;; Toggle line highlighting in all buffers
-(global-hl-line-mode t)
+  ;; if in gui-mode
+  (when (display-graphic-p)
+    ;; make the fringe thinner (default is 8 in pixels)
+    (fringe-mode 4))
 
-;; if in gui-mode
-(when (display-graphic-p)
-  ;; make the fringe thinner (default is 8 in pixels)
-  (fringe-mode 4))
-
-;; Enable xterm mouse reporting from the terminal
-(unless (display-graphic-p)
-  (xterm-mouse-mode t)
-  (global-set-key [mouse-4] '(lambda ()
-                               (interactive)
-                               (scroll-down 1)))
-  (global-set-key [mouse-5] '(lambda ()
-                               (interactive)
-                               (scroll-up 1))))
+  ;; Enable xterm mouse reporting from the terminal
+  (unless (display-graphic-p)
+    (xterm-mouse-mode t)
+    (global-set-key [mouse-4] '(lambda ()
+                                 (interactive)
+                                 (scroll-down 1)))
+    (global-set-key [mouse-5] '(lambda ()
+                                 (interactive)
+                                 (scroll-up 1))))
 
 
-;; show parenthesis match
-(show-paren-mode 1)
-(setq show-paren-style 'expression)
+  ;; show parenthesis match
+  (show-paren-mode 1)
+  (setq show-paren-style 'expression)
 
 
-;; frame font
-(if (member "Source Code Pro" (font-family-list))
-    (set-face-attribute
-     'default nil :font "Source Code Pro 9"))
+  ;; frame font
+  (if (member "Source Code Pro" (font-family-list))
+      (set-face-attribute
+       'default nil :font "Source Code Pro 9"))
 
-;; I love solarized-dark
-(package-safe-install 'color-theme-solarized)
-(load-theme 'solarized-dark t)
-;; Make underlines more readable on X11
-(if (equal window-system 'x) (setq x-underline-at-descent-line t) ())
+  ;; I love solarized-dark
+  (package-safe-install 'color-theme-solarized)
+  (load-theme 'solarized-dark t)
+  ;; Make underlines more readable on X11
+  (if (equal window-system 'x) (setq x-underline-at-descent-line t) ())
 
-;; Smart modeline
-(package-safe-install 'smart-mode-line)
-(sml/setup)
-(sml/apply-theme 'automatic)
+  ;; Smart modeline
+  (use-package smart-mode-line
+    :ensure
+    :init
+    (progn
+      (sml/setup)
+      (sml/apply-theme 'automatic)))
 
-;; Relative line numbering
-(package-safe-install 'linum-relative)
-(require 'linum-relative)
-(setq linum-relative-current-symbol "")
+  ;; Relative line numbering
+  (use-package 'linum-relative
+    :ensure
+    :init
+    // Show current line instead of 0
+    (setq linum-relative-current-symbol ""))
 
 #+end_src
 
@@ -207,19 +214,6 @@
 ;; Don't quit beacause of old habits
 (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
 (evil-ex-define-cmd "wq" (message "quit disabled"))
-
-;; Take vim's window management features
-(global-unset-key (kbd "C-w"))
-(global-set-key (kbd "C-w C-w") 'evil-window-prev)
-(global-set-key (kbd "C-w C-j") 'evil-window-down)
-(global-set-key (kbd "C-w C-k") 'evil-window-up)
-(global-set-key (kbd "C-w C-h") 'evil-window-left)
-(global-set-key (kbd "C-w C-l") 'evil-window-right)
-(global-set-key (kbd "C-w w") 'evil-window-prev)
-(global-set-key (kbd "C-w j") 'evil-window-down)
-(global-set-key (kbd "C-w k") 'evil-window-up)
-(global-set-key (kbd "C-w h") 'evil-window-left)
-(global-set-key (kbd "C-w l") 'evil-window-right)
 
 ;; Don't wait for any other keys after escape is pressed.
 (setq evil-esc-delay 0)
@@ -276,7 +270,7 @@
 * Navigation
 
 #+begin_src emacs-lisp
-(package-safe-install )
+(package-safe-install 'ag)
 
 #+end_src
 
