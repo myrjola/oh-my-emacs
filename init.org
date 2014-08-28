@@ -194,84 +194,116 @@
       (sml/apply-theme 'automatic)))
 
   ;; Relative line numbering
-  (use-package 'linum-relative
+  (use-package linum-relative
     :ensure
     :init
-    // Show current line instead of 0
+    ;; Show current line instead of 0
     (setq linum-relative-current-symbol ""))
-
 #+end_src
 
 * Evil
 
 #+begin_src emacs-lisp
-(package-safe-install 'evil)
-(require 'evil)
-(setq evil-auto-indent t)
-(setq evil-regexp-search t)
-(setq evil-want-C-i-jump t)
-(evil-mode)
-;; Don't quit beacause of old habits
-(evil-ex-define-cmd "q[uit]" (message "quit disabled"))
-(evil-ex-define-cmd "wq" (message "quit disabled"))
+  (use-package evil
+    :init
+    (progn
+      (setq evil-auto-indent t)
+      (setq evil-regexp-search t)
+      (setq evil-want-C-i-jump t)
+      (evil-mode)
+      ;; Don't quit because of old habits
+      (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
+      (evil-ex-define-cmd "wq" (message "quit disabled"))
 
-;; Don't wait for any other keys after escape is pressed.
-(setq evil-esc-delay 0)
+      ;; Don't wait for any other keys after escape is pressed.
+      (setq evil-esc-delay 0)
 
-;; Make sure escape gets back to normal state and quits things.
-(define-key evil-insert-state-map [escape] 'evil-normal-state)
-(define-key evil-visual-state-map [escape] 'evil-normal-state)
-(define-key evil-emacs-state-map [escape] 'evil-normal-state)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-map [escape] 'abort-recursive-edit)
-(define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
-(define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
-(define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
-(define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
+      ;; Make sure escape gets back to normal state and quits things.
+      (define-key evil-insert-state-map [escape] 'evil-normal-state)
+      (define-key evil-visual-state-map [escape] 'evil-normal-state)
+      (define-key evil-emacs-state-map [escape] 'evil-normal-state)
+      (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+      (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
+      (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
-;; Misc mappings
-(define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
-(define-key evil-normal-state-map (kbd ",k") 'kill-buffer)
+      ;; Misc mappings
+      (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
+      (define-key evil-normal-state-map (kbd ",k") 'kill-buffer)
 
-;; More helm mappings
-(eval-after-load "helm"
-  (progn
-    (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
-    (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
-    (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
-    (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
-    (define-key evil-normal-state-map (kbd ",,") 'helm-mini)
-    (define-key evil-normal-state-map (kbd ",e") 'helm-find-files)))
+      ;; More helm mappings
+      (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
+      (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
+      (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
+      (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
+      (define-key evil-normal-state-map (kbd ",,") 'helm-mini)
+      (define-key evil-normal-state-map (kbd ",e") 'helm-find-files)
 
-(eval-after-load "git-gutter-mode"
-  (progn
-    (define-key evil-normal-state-map (kbd ",ga") 'git-gutter:stage-hunk)
-    (define-key evil-normal-state-map (kbd ",gn") 'git-gutter:next-hunk)
-    (define-key evil-normal-state-map (kbd ",gp") 'git-gutter:previous-hunk)))
+      (eval-after-load "git-gutter-mode"
+        (progn
+          (define-key evil-normal-state-map (kbd ",ga") 'git-gutter:stage-hunk)
+          (define-key evil-normal-state-map (kbd ",gn") 'git-gutter:next-hunk)
+          (define-key evil-normal-state-map (kbd ",gp") 'git-gutter:previous-hunk)))
 
-;; Indent region in visual-mode with tab
-(define-key evil-visual-state-map (kbd "<tab>") 'indent-region)
+      ;; Indent region in visual-mode with tab
+      (define-key evil-visual-state-map (kbd "<tab>") 'indent-region)))
 
-(package-safe-install 'evil-nerd-commenter)
-(define-key evil-normal-state-map (kbd ",cp") 'evilnc-comment-or-uncomment-paragraphs)
-;; Comment or uncomment the current line or marked region
-(define-key evil-normal-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-lines)
+  (use-package evil-nerd-commenter
+    :ensure
+    :init
+    (progn
+      (define-key evil-normal-state-map (kbd ",cp") 'evilnc-comment-or-uncomment-paragraphs)
+      ;; Comment or uncomment the current line or marked region
+      (define-key evil-normal-state-map (kbd ",cc") 'evilnc-comment-or-uncomment-lines)))
 
-(package-safe-install 'evil-surround)
-(global-evil-surround-mode 1)
-(package-safe-install 'evil-numbers)
-(package-safe-install 'evil-god-state)
+  (use-package evil-surround
+    :ensure
+    :init
+    (progn
+      (global-evil-surround-mode 1)))
+  (use-package evil-numbers :ensure)
+  (use-package evil-god-state :ensure)
 
 #+end_src
-* Navigation
+* Navigation and Completion
+** Company mode
+#+begin_src emacs-lisp
+  (defun company-complete-lambda (arg)
+    "Ignores passed in arg like a lambda and runs company-complete"
+    (company-complete))
+
+  (use-package company :ensure
+    :init
+    (progn
+      (setq
+       ;; never start auto-completion unless I ask for it
+        ;; company-idle-delay nil
+       ;; autocomplete right after '.'
+       company-minimum-prefix-length 0
+       ;; remove echo delay
+       company-echo-delay 0
+       ;; don't complete in certain modes
+       company-global-modes '(not git-commit-mode)
+       ;; make sure evil uses the right completion functions
+       evil-complete-next-func 'company-complete-lambda
+       evil-complete-previous-func 'company-complete-lambda))
+      (define-key company-active-map (kbd "C-n") 'company-select-next)
+      (define-key company-active-map (kbd "C-p") 'company-select-previous)
+      (define-key company-active-map (kbd "C-SPC") 'company-complete-selection)
+    (add-hook 'after-init-hook 'global-company-mode))
+
+#+end_src
+
+** Misc packages
 
 #+begin_src emacs-lisp
-(package-safe-install 'ag)
-
+(use-package ag :ensure)
 #+end_src
 
 * Autotangle this file
