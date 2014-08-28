@@ -87,7 +87,6 @@ Emacs session.
       (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
       (evil-ex-define-cmd "wq" (message "quit disabled"))
 
-
       ;; Take vim's window management features
       (global-unset-key (kbd "C-w"))
       (global-set-key (kbd "C-w C-w") 'evil-window-prev)
@@ -296,7 +295,7 @@ serveral months and it's amazing.
 #+END_SRC
 
 * Todo
-*** Evil mode
+** Evil mode
 - Evil has some conflicts with smartparens due to cursor position. I should
   temporarily disable =evil-local-mode= when I do operations like
   =sp-up-sexp=. Maybe I can get this by =post-command-hook= or smartparens's

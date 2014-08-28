@@ -1,3 +1,8 @@
+#+PROPERTY: header-args    :tangle yes
+
+* Boilerplate and fundamental settings
+
+#+BEGIN_SRC emacs-lisp
 
 ;; believe me, you don't need menubar, toolbar nor scrollbar
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
@@ -125,6 +130,11 @@
 (package-safe-install 'flycheck 'flycheck-ledger)
 (add-hook 'prog-mode-hook 'flycheck-mode)
 
+#+END_SRC
+
+* GUI settings
+
+#+begin_src emacs-lisp
 ;; show column number and line number
 (dolist (mode '(column-number-mode line-number-mode))
   (when (fboundp mode) (funcall mode t)))
@@ -183,6 +193,11 @@
 (require 'linum-relative)
 (setq linum-relative-current-symbol "")
 
+#+end_src
+
+* Evil
+
+#+begin_src emacs-lisp
 (package-safe-install 'evil)
 (require 'evil)
 (setq evil-auto-indent t)
@@ -257,4 +272,15 @@
 (package-safe-install 'evil-numbers)
 (package-safe-install 'evil-god-state)
 
+#+end_src
+* Navigation
+
+#+begin_src emacs-lisp
 (package-safe-install )
+
+#+end_src
+
+* Autotangle this file
+Local Variables:
+eval: (add-hook (quote after-save-hook) (lambda nil (org-babel-tangle)) nil t)
+End:
