@@ -709,7 +709,6 @@
   'deploy-customer-config)
 (add-hook 'ruby-mode-hook 'evil-ruby-mode)
 
-(use-package ggtags :ensure t)
 (use-package helm-gtags
   :ensure t
   :init
@@ -740,11 +739,14 @@
     (add-hook 'asm-mode-hook 'helm-gtags-mode)
 
     ;; key bindings
+    (define-key evil-normal-state-map (kbd ",gs") 'helm-gtags-select)
     (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
     (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
     (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)))
+
+(require 'cc-mode)
 
 (use-package function-args
   :ensure t
@@ -772,6 +774,27 @@
   :ensure t
   :init (progn
           (remove-hook 'prog-mode-hook 'ws-butler-mode)))
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+
+(use-package irony
+  :ensure irony
+  :init (progn
+          (add-hook 'c++-mode-hook 'irony-mode)
+          (add-hook 'c-mode-hook 'irony-mode)
+          (add-hook 'objc-mode-hook 'irony-mode)
+
+          ;; replace the `completion-at-point' and `complete-symbol' bindings in
+          ;; irony-mode's buffers by irony-mode's function
+          (add-hook 'irony-mode-hook 'my-irony-mode-hook))
+
+(use-package company-irony
+ :ensure t
+ :init (add-to-list 'company-backends 'company-irony))
 
 ;; setup GDB
 (setq
