@@ -15,7 +15,10 @@
  '(evilnc-hotkey-comment-operator ",cc")
  '(flycheck-clang-include-path
    (quote
-    ("/home/martin/git/kde/inst/kde_frameworks/include" "/home/martin/git/qi3ipc/include/" "/usr/include/" "/usr/include/qt/")))
+    ("/home/martin/git/kde/inst/kde_frameworks/include/KF5" "/home/martin/git/kde/inst/kde_frameworks/include" "/home/martin/git/qi3ipc/include/" "/usr/include/" "/usr/include/qt/")))
+ '(flycheck-gcc-include-path
+   (quote
+    ("/home/martin/git/kde/inst/kde_frameworks/include/KF5" "/usr/include/qt")))
  '(magit-save-some-buffers (quote dontask))
  '(magit-use-overlays nil)
  '(org-attach-method (quote lns))
@@ -28,7 +31,10 @@
  '(rbenv-show-active-ruby-in-modeline nil)
  '(safe-local-variable-values
    (quote
-    ((eval add-hook
+    ((eval add-to-list
+           (quote flycheck-gcc-include-path)
+           "/home/martin/git/plasmi3bar/qi3ipc/include")
+     (eval add-hook
            (quote after-save-hook)
            (lambda nil
              (org-babel-tangle))

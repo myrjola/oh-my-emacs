@@ -371,7 +371,7 @@
       (define-key evil-normal-state-map (kbd ",pr") 'projectile-replace)
       (define-key evil-normal-state-map (kbd ",pc") 'projectile-compile-project)
       (define-key evil-normal-state-map (kbd ",po") 'projectile-find-other-file)
-      (define-key evil-normal-state-map (kbd ",pt") 'projectile-regenerate-tags)))
+      (define-key evil-normal-state-map (kbd ",pt") 'projectile-test-project)))
 
 (use-package helm-projectile :ensure t)
 
@@ -868,7 +868,9 @@
 
 (use-package company-irony
  :ensure t
- :init (add-to-list 'company-backends 'company-irony))
+ :init (progn
+         (add-to-list 'company-backends 'company-irony)
+         (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)))
 
 ;; setup GDB
 (setq
