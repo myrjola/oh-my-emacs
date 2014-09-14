@@ -304,6 +304,7 @@
      helm-input-idle-delay 0.1
      helm-m-occur-idle-delay 0.1)
     (helm-mode t)
+    (define-key evil-normal-state-map (kbd "gt") 'helm-semantic-or-imenu)
     (global-set-key (kbd "M-x") 'helm-M-x)
     (global-set-key (kbd "C-x C-f") 'helm-find-files)))
 
@@ -739,10 +740,9 @@
     (add-hook 'asm-mode-hook 'helm-gtags-mode)
 
     ;; key bindings
-    (define-key evil-normal-state-map (kbd ",gs") 'helm-gtags-select)
-    (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
-    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+    (define-key evil-normal-state-map (kbd "gs") 'helm-gtags-select)
+    (define-key evil-normal-state-map (kbd "gd") 'helm-gtags-dwim)
+    (define-key evil-normal-state-map (kbd "gp") 'helm-gtags-pop-stack)
     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)))
 
@@ -790,7 +790,7 @@
 
           ;; replace the `completion-at-point' and `complete-symbol' bindings in
           ;; irony-mode's buffers by irony-mode's function
-          (add-hook 'irony-mode-hook 'my-irony-mode-hook))
+          (add-hook 'irony-mode-hook 'my-irony-mode-hook)))
 
 (use-package company-irony
  :ensure t
@@ -858,6 +858,35 @@
     (message "ERR: not in Org mode")
     (ding))))
 
+(defun magit-toggle-whitespace ()
+  (interactive)
+  (if (member "-w" magit-diff-options)
+      (magit-dont-ignore-whitespace)
+    (magit-ignore-whitespace)))
+
+(defun magit-ignore-whitespace ()
+  (interactive)
+  (add-to-list 'magit-diff-options "-w")
+  (magit-refresh))
+
+(defun magit-dont-ignore-whitespace ()
+  (interactive)
+  (setq magit-diff-options (remove "-w" magit-diff-options))
+  (magit-refresh))
+
+;; full screen magit-status
+
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+
 (use-package magit
   :ensure t
   :init
@@ -868,35 +897,6 @@
     (add-hook 'git-rebase-mode-hook
               (lambda ()
                 (evil-local-mode -1)))
-
-    (defun magit-toggle-whitespace ()
-      (interactive)
-      (if (member "-w" magit-diff-options)
-          (magit-dont-ignore-whitespace)
-        (magit-ignore-whitespace)))
-
-    (defun magit-ignore-whitespace ()
-      (interactive)
-      (add-to-list 'magit-diff-options "-w")
-      (magit-refresh))
-
-    (defun magit-dont-ignore-whitespace ()
-      (interactive)
-      (setq magit-diff-options (remove "-w" magit-diff-options))
-      (magit-refresh))
-
-    ;; full screen magit-status
-
-    (defadvice magit-status (around magit-fullscreen activate)
-      (window-configuration-to-register :magit-fullscreen)
-      ad-do-it
-      (delete-other-windows))
-
-    (defun magit-quit-session ()
-      "Restores the previous window configuration and kills the magit buffer"
-      (interactive)
-      (kill-buffer)
-      (jump-to-register :magit-fullscreen))
 
     (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 

@@ -49,3 +49,10 @@ bookmarks
 /org-clock-save.el
 /request/curl-cookie-jar
 /session.*
+/GPATH
+/GRTAGS
+/GTAGS
+/ede-projects.el
+/eshell/
+/irony/
+/semanticdb/
