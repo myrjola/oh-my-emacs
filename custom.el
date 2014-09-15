@@ -31,7 +31,47 @@
  '(rbenv-show-active-ruby-in-modeline nil)
  '(safe-local-variable-values
    (quote
-    ((eval add-to-list
+    ((eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            (concat "cd "
+                    (s-replace "src" "build"
+                               (projectile-project-root))
+                    "; make install -j8")
+            projectile-compilation-cmd-map)
+           (puthash
+            (projectile-project-root)
+            (concat "cd "
+                    (s-replace "src" "build"
+                               (projectile-project-root))
+                    "; make test -j8")
+            projectile-test-cmd-map))
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            (concat "cd "
+                    (s-replace "src" "build"
+                               (projectile-project-root))
+                    "; make install -j8")
+            projectile-compilation-cmd-map))
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "cd ~/git/kde/build/5/kde/workspace/plasma-workspace/; make install -j8" projectile-compilation-cmd-map))
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "cd
+~/git/kde/build/5/kde/workspace/plasma-workspace/; make install -j8" projectile-compilation-cmd-map))
+     (eval add-to-list
            (quote flycheck-gcc-include-path)
            "/home/martin/git/plasmi3bar/qi3ipc/include")
      (eval add-hook

@@ -305,6 +305,7 @@
      helm-m-occur-idle-delay 0.1)
     (helm-mode t)
     (define-key evil-normal-state-map (kbd "gt") 'helm-semantic-or-imenu)
+    (define-key evil-normal-state-map (kbd "gD") 'helm-etags-select)
     (global-set-key (kbd "M-x") 'helm-M-x)
     (global-set-key (kbd "C-x C-f") 'helm-find-files)))
 
@@ -331,15 +332,14 @@
     (progn
       (projectile-global-mode)
       (setq projectile-enable-caching t)
-      (setq projectile-switch-project-action 'helm-projectile)
       (global-set-key (kbd "C-x c h") 'helm-projectile)
-      (define-key evil-normal-state-map (kbd ",ps") 'projectile-switch-project)
+      (define-key evil-normal-state-map (kbd ",ps") 'helm-projectile-switch-project)
       (define-key evil-normal-state-map (kbd ",pa") 'projectile-ag)
       (define-key evil-normal-state-map (kbd ",ph") 'helm-projectile)
       (define-key evil-normal-state-map (kbd ",pr") 'projectile-replace)
       (define-key evil-normal-state-map (kbd ",pc") 'projectile-compile-project)
       (define-key evil-normal-state-map (kbd ",po") 'projectile-find-other-file)
-      (define-key evil-normal-state-map (kbd ",pt") 'projectile-regenerate-tags)))
+      (define-key evil-normal-state-map (kbd ",pt") 'projectile-test-project)))
 
 (use-package helm-projectile :ensure t)
 
@@ -794,7 +794,9 @@
 
 (use-package company-irony
  :ensure t
- :init (add-to-list 'company-backends 'company-irony))
+ :init (progn
+         (add-to-list 'company-backends 'company-irony)
+         (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)))
 
 ;; setup GDB
 (setq
@@ -813,10 +815,6 @@
 (global-semantic-stickyfunc-mode 1)
 
 (semantic-mode 1)
-
-;; Enable EDE only in C/C++
-(require 'ede)
-(global-ede-mode)
 
 (server-mode t)
 (use-package edit-server

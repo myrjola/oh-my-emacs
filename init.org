@@ -364,9 +364,8 @@
     (progn
       (projectile-global-mode)
       (setq projectile-enable-caching t)
-      (setq projectile-switch-project-action 'helm-projectile)
       (global-set-key (kbd "C-x c h") 'helm-projectile)
-      (define-key evil-normal-state-map (kbd ",ps") 'projectile-switch-project)
+      (define-key evil-normal-state-map (kbd ",ps") 'helm-projectile-switch-project)
       (define-key evil-normal-state-map (kbd ",pa") 'projectile-ag)
       (define-key evil-normal-state-map (kbd ",ph") 'helm-projectile)
       (define-key evil-normal-state-map (kbd ",pr") 'projectile-replace)
@@ -890,10 +889,6 @@
 (global-semantic-stickyfunc-mode 1)
 
 (semantic-mode 1)
-
-;; Enable EDE only in C/C++
-(require 'ede)
-(global-ede-mode)
 #+end_src
 
 * Misc modes and settings
@@ -1008,5 +1003,4 @@ Ediff has a hard time with folded org-files. This should fix it.
 * Autotangle this file
 Local Variables:
 eval: (add-hook (quote after-save-hook) (lambda nil (org-babel-tangle)) nil t)
-End
-:
+End:
