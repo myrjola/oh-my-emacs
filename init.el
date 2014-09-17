@@ -142,7 +142,13 @@
 ;; Toggle line highlighting in all buffers except org-mode because linum can't
 ;; handle big files that well
 (global-linum-mode t)
-(add-hook 'org-mode-hook (lambda () (linum-mode 0)))
+(add-hook 'org-mode-hook (lambda () (linum-mode -1)))
+;; mu4e windows don't need line numbers as well
+(add-hook 'mu4e-view-mode-hook (lambda () (linum-mode -1)))
+(add-hook 'mu4e-main-mode-hook (lambda () (linum-mode -1)))
+(add-hook 'mu4e-compose-mode-hook (lambda () (linum-mode -1)))
+(add-hook 'mu4e-headers-mode-hook (lambda () (linum-mode -1)))
+(add-hook 'mu4e-about-mode-hook (lambda () (linum-mode -1)))
 
 ;; Toggle line highlighting in all buffers
 (global-hl-line-mode t)
@@ -169,9 +175,9 @@
 
 
 ;; frame font
-(if (member "Source Code Pro" (font-family-list))
+(if (member "Dejavu Sans Mono" (font-family-list))
     (set-face-attribute
-     'default nil :font "Source Code Pro 9"))
+     'default nil :font "Dejavu Sans Mono 9"))
 
 ;; I love solarized-dark
 (package-safe-install 'color-theme-solarized)
@@ -489,18 +495,23 @@
          :empty-lines 1)
         ("l" "ticket todo" entry (file+olp "~/org/gtd.org" "RELEX" "Misc tasks")
          "* TODO %c\n%U\n%i" :clock-in t :clock-resume t)
+        ("m" "Mail" entry (file+headline "~/org/gtd.org" "Tasks")
+         "* TODO %?\n%i\n%a")
         ("r" "RELEX")
         ("rs" "Sokos" entry (file+olp "~/org/gtd.org" "RELEX" "Sokos")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
         ("rm" "Misc tasks" entry (file+olp "~/org/gtd.org" "RELEX" "Misc tasks")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
+        ("rM" "Mail" entry (file+olp "~/org/gtd.org" "RELEX" "Mail")
+         "* TODO %?\n%U\n%a" :clock-in t :clock-resume t)
         ("rK" "KiiltoClean" entry (file+olp "~/org/gtd.org" "RELEX" "KiiltoClean")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
         ("rk" "Karl Hedin" entry (file+olp "~/org/gtd.org" "RELEX" "Karl Hedin")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
-        ("rA" "Atria" entry (file+olp "~/org/gtd.org" "RELEX" "Atria")
+        ("ra" "Atria or AKB")
+        ("rat" "Atria" entry (file+olp "~/org/gtd.org" "RELEX" "Atria")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
-        ("ra" "Akademibokhandeln" entry (file+olp "~/org/gtd.org" "RELEX" "Akademibokhandeln")
+        ("rak" "Akademibokhandeln" entry (file+olp "~/org/gtd.org" "RELEX" "Akademibokhandeln")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
         ("rv" "Victoria" entry (file+olp "~/org/gtd.org" "RELEX" "Victoria")
          "* TODO %?\n%U" :clock-in t :clock-resume t)
@@ -516,7 +527,6 @@
 ;; position the habit graph on the agenda to the right of the default
 (setq org-habit-graph-column 50)
 (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
-
 
 ;; Compact the block agenda view
 (setq org-agenda-compact-blocks t)
@@ -899,3 +909,79 @@
     (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
     (define-key magit-status-mode-map (kbd "W") 'magit-toggle-whitespace)))
+
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+(require 'mu4e)
+(require 'smtpmail)
+;; use the offlineimap command to sync
+(setq mu4e-get-mail-command "offlineimap")
+;; tell message-mode how to send mail
+(setq message-send-mail-function 'smtpmail-send-it)
+;; org-link support
+(require 'org-mu4e)
+
+;; enable inline images
+(setq mu4e-view-show-images t)
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+   (imagemagick-register-types))
+
+;; Convert html-messages. This needs python2-html2text on arch linux
+(setq mu4e-html2text-command "html2text_py -b 79")
+
+;; Use unicode characters in some views
+(setq mu4e-use-fancy-chars t)
+
+;; Set mu4e to the default mail client
+(setq mail-user-agent 'mu4e-user-agent)
+
+(defvar my-mu4e-account-alist
+  '(("Gmail"
+     (mu4e-sent-folder "/Gmail/[Gmail].Sent Mail")
+     (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
+     (mu4e-trash-folder "/Gmail/[Gmail].Trash")
+     (user-mail-address "martin.yrjola@gmail.com")
+     (smtpmail-default-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-server "smtp.gmail.com")
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-service 25))
+    ("Relex"
+     (mu4e-sent-folder "/Relex/Sent Items")
+     (mu4e-drafts-folder "/Relex/Drafts")
+     (mu4e-trash-folder "/Relex/Deleted Items")
+     (user-mail-address "martin.yrjola@relex.fi")
+     (smtpmail-default-smtp-server "he10.nebula.fi")
+     (smtpmail-smtp-server "he10.nebula.fi")
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-service 587))))
+
+(defun my-mu4e-set-account ()
+  "Set the account for composing a message."
+  (let* ((account
+          (if mu4e-compose-parent-message
+              (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                (string-match "/\\(.*?\\)/" maildir)
+                (match-string 1 maildir))
+            (completing-read (format "Compose with account: (%s) "
+                                     (mapconcat #'(lambda (var) (car var))
+                                                my-mu4e-account-alist "/"))
+                             (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                             nil t nil nil (caar my-mu4e-account-alist))))
+         (account-vars (cdr (assoc account my-mu4e-account-alist))))
+    (if account-vars
+        (mapc #'(lambda (var)
+                  (set (car var) (cadr var)))
+              account-vars)
+      (error "No email account found"))))
+
+(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-
+
+(setq mu4e-maildir-shortcuts
+    '(("/Gmail/INBOX"             . ?i)
+      ("/Gmail/[Gmail].Sent Mail" . ?s)
+      ("/Gmail/!plasma"           . ?p)
+      ("/Gmail/?mailing_lists"    . ?l)
+      ("/Gmail/[Gmail].Trash"     . ?t)
+      ("/Relex/INBOX"             . ?r)
+      ("/Relex/Sent Items"        . ?S)
+      ("/Gmail/[Gmail].All Mail"  . ?a)))
