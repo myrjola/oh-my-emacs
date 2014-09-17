@@ -271,6 +271,10 @@
   :init
   (evil-define-key 'normal global-map (kbd "SPC") 'evil-execute-in-god-state))
 
+(use-package evil-matchit
+  :ensure t
+  :init (global-evil-matchit-mode 1))
+
 (defun company-complete-lambda (arg)
   "Ignores passed in arg like a lambda and runs company-complete"
   (company-complete))
@@ -517,10 +521,12 @@
          "* TODO %?\n%U" :clock-in t :clock-resume t)
         ("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
          "* TODO %?\n%i")
+        ("x" "X Clipboard" entry (file+headline "~/org/gtd.org" "Tasks")
+         "* TODO %?\n%i%x")
         ("c" "Capture" entry (file "~/org/captures.org")
          "* %?\nEntered on %U\n%i")
         ("h" "Habit" entry (file+headline "~/org/gtd.org" "Habits")
-         "* NEXT %?\n%U\n%a\nSCHEDUkLED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+         "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\nEntered on %U\n"))))
 
@@ -975,6 +981,10 @@
       (error "No email account found"))))
 
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-
+
+(add-to-list 'mu4e-bookmarks '("flag:attach"    "Messages with attachment"   ?a) t)
+(add-to-list 'mu4e-bookmarks '("size:5M..500M"  "Big messages"               ?b) t)
+(add-to-list 'mu4e-bookmarks '("flag:flagged"   "Flagged messages"           ?f) t)
 
 (setq mu4e-maildir-shortcuts
     '(("/Gmail/INBOX"             . ?i)
