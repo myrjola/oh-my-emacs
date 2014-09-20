@@ -1093,7 +1093,7 @@ I use multiple accounts taken from http://www.djcbsoftware.nl/code/mu/mu4e/Multi
               account-vars)
       (error "No email account found"))))
 
-(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-
+(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 
 #+end_src
 
@@ -1113,6 +1113,13 @@ I use multiple accounts taken from http://www.djcbsoftware.nl/code/mu/mu4e/Multi
       ("/Relex/INBOX"             . ?r)
       ("/Relex/Sent Items"        . ?S)
       ("/Gmail/[Gmail].All Mail"  . ?a)))
+#+end_src
+
+** Actions
+#+begin_src emacs-lisp
+;; define 'b' as the shortcut
+(add-to-list 'mu4e-view-actions
+   '("bView in browser" . mu4e-action-view-in-browser) t)
 #+end_src
 
 * Autotangle this file

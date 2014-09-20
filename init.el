@@ -980,7 +980,7 @@
               account-vars)
       (error "No email account found"))))
 
-(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-
+(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 
 (add-to-list 'mu4e-bookmarks '("flag:attach"    "Messages with attachment"   ?a) t)
 (add-to-list 'mu4e-bookmarks '("size:5M..500M"  "Big messages"               ?b) t)
@@ -995,3 +995,7 @@
       ("/Relex/INBOX"             . ?r)
       ("/Relex/Sent Items"        . ?S)
       ("/Gmail/[Gmail].All Mail"  . ?a)))
+
+;; define 'b' as the shortcut
+(add-to-list 'mu4e-view-actions
+   '("bView in browser" . mu4e-action-view-in-browser) t)

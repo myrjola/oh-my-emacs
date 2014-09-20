@@ -104,7 +104,9 @@
 ")
      (python-shell-completion-setup-code . "from IPython.core.completerlib import module_completion")
      (python-shell-interpreter-args . "/home/martin/git/neverlate/django/manage.py shell")
-     (python-shell-interpreter . "python")))))
+     (python-shell-interpreter . "python"))))
+ '(smtpmail-smtp-server "he10.nebula.fi")
+ '(smtpmail-smtp-service 587))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
