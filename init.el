@@ -949,15 +949,24 @@
      (user-mail-address "martin.yrjola@gmail.com")
      (smtpmail-default-smtp-server "smtp.gmail.com")
      (smtpmail-smtp-server "smtp.gmail.com")
+     (mu4e-compose-signature (string-join '("Martin Yrjölä"
+                                            "martin.yrjola@gmail.com"
+                                            "+358 44 040 7895")
+                                          "\n"))
      (smtpmail-stream-type starttls)
      (smtpmail-smtp-service 25))
     ("Relex"
-     (mu4e-sent-folder "/Relex/Sent Items")
+     (mu4e-sent-folder "/Relex/Sent-Items")
      (mu4e-drafts-folder "/Relex/Drafts")
      (mu4e-trash-folder "/Relex/Deleted Items")
      (user-mail-address "martin.yrjola@relex.fi")
      (smtpmail-default-smtp-server "he10.nebula.fi")
      (smtpmail-smtp-server "he10.nebula.fi")
+     (mu4e-compose-signature (string-join '("Martin Yrjölä"
+                                            "RELEX"
+                                            "Solutions Specialist"
+                                            "+358 44 040 7895")
+                                          "\n"))
      (smtpmail-stream-type starttls)
      (smtpmail-smtp-service 587))))
 
