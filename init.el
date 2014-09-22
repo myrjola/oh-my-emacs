@@ -920,7 +920,7 @@
 (require 'mu4e)
 (require 'smtpmail)
 ;; use the offlineimap command to sync
-(setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-get-mail-command "true")
 ;; tell message-mode how to send mail
 (setq message-send-mail-function 'smtpmail-send-it)
 ;; org-link support
