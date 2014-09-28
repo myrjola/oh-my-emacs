@@ -941,12 +941,19 @@
 ;; Set mu4e to the default mail client
 (setq mail-user-agent 'mu4e-user-agent)
 
+;; Don't keep message buffers around
+(setq message-kill-buffer-on-exit t)
+
+;; Don't save message to Sent Messages, DavMail/Gmail takes care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
 (defvar my-mu4e-account-alist
   '(("Gmail"
      (mu4e-sent-folder "/Gmail/[Gmail].Sent Mail")
      (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
      (mu4e-trash-folder "/Gmail/[Gmail].Trash")
      (user-mail-address "martin.yrjola@gmail.com")
+     (user-full-name "Martin Yrjölä")
      (smtpmail-default-smtp-server "smtp.gmail.com")
      (smtpmail-smtp-server "smtp.gmail.com")
      (mu4e-compose-signature (string-join '("Martin Yrjölä"
@@ -955,20 +962,36 @@
                                           "\n"))
      (smtpmail-stream-type starttls)
      (smtpmail-smtp-service 25))
+    ("Aalto"
+     (mu4e-sent-folder "/Gmail/[Gmail].Sent Mail")
+     (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
+     (mu4e-trash-folder "/Gmail/[Gmail].Trash")
+     (user-mail-address "martin.yrjola@aalto.fi")
+     (user-full-name "Martin Yrjölä")
+     (smtpmail-default-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-server "smtp.gmail.com")
+     (mu4e-compose-signature (string-join '("Martin Yrjölä"
+                                            "martin.yrjola@aalto.fi"
+                                            "+358 44 040 7895")
+                                          "\n"))
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-user "martin.yrjola@gmail.com")
+     (smtpmail-mail-address "martin.yrjola@aalto.fi")
+     (smtpmail-smtp-service 25))
     ("Relex"
-     (mu4e-sent-folder "/Relex/Sent-Items")
+     (mu4e-sent-folder "/Relex/Sent")
      (mu4e-drafts-folder "/Relex/Drafts")
      (mu4e-trash-folder "/Relex/Deleted Items")
      (user-mail-address "martin.yrjola@relex.fi")
-     (smtpmail-default-smtp-server "he10.nebula.fi")
-     (smtpmail-smtp-server "he10.nebula.fi")
+     (user-full-name "Martin Yrjölä")
+     (smtpmail-default-smtp-server "localhost")
+     (smtpmail-smtp-server "localhost")
      (mu4e-compose-signature (string-join '("Martin Yrjölä"
                                             "RELEX"
                                             "Solutions Specialist"
                                             "+358 44 040 7895")
                                           "\n"))
-     (smtpmail-stream-type starttls)
-     (smtpmail-smtp-service 587))))
+     (smtpmail-smtp-service 1025))))
 
 (defun my-mu4e-set-account ()
   "Set the account for composing a message."
@@ -997,13 +1020,12 @@
 
 (setq mu4e-maildir-shortcuts
     '(("/Gmail/INBOX"             . ?i)
-      ("/Gmail/[Gmail].Sent Mail" . ?s)
+      ("/Relex/INBOX"             . ?r)
+      ("/Relex/Sent Items"        . ?s)
+      ("/Gmail/[Gmail].Sent Mail" . ?S)
       ("/Gmail/!plasma"           . ?p)
       ("/Gmail/?mailing_lists"    . ?l)
-      ("/Gmail/[Gmail].Trash"     . ?t)
-      ("/Relex/INBOX"             . ?r)
-      ("/Relex/Sent Items"        . ?S)
-      ("/Gmail/[Gmail].All Mail"  . ?a)))
+      ("/Gmail/[Gmail].Trash"     . ?t)))
 
 ;; define 'b' as the shortcut
 (add-to-list 'mu4e-view-actions
