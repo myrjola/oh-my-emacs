@@ -760,6 +760,12 @@
   'deploy-customer-config)
 (add-hook 'ruby-mode-hook 'evil-ruby-mode)
 
+(defun gtags-or-evil-goto-definition ()
+  (interactive)
+  (if (locate-dominating-file default-directory "GTAGS")
+      (helm-gtags-dwim)
+    (evil-goto-definition)))
+
 (use-package helm-gtags
   :ensure t
   :init
@@ -791,7 +797,7 @@
 
     ;; key bindings
     (define-key evil-normal-state-map (kbd "gs") 'helm-gtags-select)
-    (define-key evil-normal-state-map (kbd "gd") 'helm-gtags-dwim)
+    (define-key evil-normal-state-map (kbd "gd") 'gtags-or-evil-goto-definition)
     (define-key evil-normal-state-map (kbd "gp") 'helm-gtags-pop-stack)
     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)))
