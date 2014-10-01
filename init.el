@@ -3,6 +3,9 @@
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
 
+;; Some extra packages not found in elpa
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 (package-initialize)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -890,7 +893,7 @@
                 (lambda ()
                   (make-local-variable 'evil-ex-commands)
                   (setq evil-ex-commands (copy-list evil-ex-commands))
-                  (evil-ex-define-cmd "w[rite]" 'edit-server-save)))
+                  (evil-ex-define-cmd "w[rite]" 'on-edit-server-done-do-backup)))
       (edit-server-start)))
 
 (use-package rainbow-delimiters
@@ -1079,7 +1082,7 @@
 (setq mu4e-maildir-shortcuts
     '(("/Gmail/INBOX"             . ?i)
       ("/Relex/INBOX"             . ?r)
-      ("/Relex/Sent Items"        . ?s)
+      ("/Relex/Sent"              . ?s)
       ("/Gmail/[Gmail].Sent Mail" . ?S)
       ("/Gmail/!plasma"           . ?p)
       ("/Gmail/?mailing_lists"    . ?l)
@@ -1088,3 +1091,18 @@
 ;; define 'b' as the shortcut
 (add-to-list 'mu4e-view-actions
    '("bView in browser" . mu4e-action-view-in-browser) t)
+
+(require 'helm-mu)
+
+(defun helm-mu-contacts-insert-action (candidate)
+  "Insert email in current buffer."
+  (let* ((cand (split-string candidate "\t"))
+         (name (cadr cand))
+         (address (car cand)))
+    (with-helm-current-buffer
+      (insert address))))
+
+(helm-add-action-to-source
+ "Insert email to current buffer"
+ 'helm-mu-contacts-insert-action
+ helm-source-mu-contacts)
