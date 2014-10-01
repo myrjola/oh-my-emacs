@@ -76,6 +76,8 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; enable to support navigate in camelCase words
 (global-subword-mode t)
+;; newline indents
+(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; shell-mode settings
 (unless (eq system-type 'windows-nt)
@@ -168,7 +170,6 @@
                                (interactive)
                                (scroll-up 1))))
 
-
 ;; show parenthesis match
 (show-paren-mode 1)
 (setq show-paren-style 'expression)
@@ -200,6 +201,21 @@
   ;; Show current line instead of 0
   (setq linum-relative-current-symbol ""))
 
+;; Smooth scrolling
+(use-package smooth-scrolling
+  :ensure t
+  :init
+  (progn
+    (setq smooth-scroll-margin 5)
+    (setq scroll-conservatively 9999
+          scroll-preserve-screen-position t)))
+
+(use-package fill-column-indicator
+  :ensure t
+  :init (progn
+  (add-hook 'text-mode-hook 'turn-on-fci-mode)
+  (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
+
 (use-package evil
   :ensure t
   :init
@@ -211,6 +227,21 @@
     ;; Don't quit because of old habits
     (evil-ex-define-cmd "q[uit]" (message "quit disabled"))
     (evil-ex-define-cmd "wq" (message "quit disabled"))
+
+    ;; Page up and down with C-j and C-k
+    (define-key evil-normal-state-map (kbd "C-k") (lambda ()
+                                                    (interactive)
+                                                    (evil-scroll-up nil)))
+    (define-key evil-normal-state-map (kbd "C-j") (lambda ()
+                                                    (interactive)
+                                                    (evil-scroll-down nil)))
+
+
+    ;; Evil doesn't make sense in certain modes
+    (add-hook 'text-mode-hook 'turn-on-evil-mode)
+    (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+    (add-hook 'comint-mode-hook 'turn-on-evil-mode)
+    (add-hook 'Info-mode-hook 'turn-off-evil-mode)
 
     ;; Don't wait for any other keys after escape is pressed.
     (setq evil-esc-delay 0)
@@ -833,12 +864,34 @@
 (semantic-mode 1)
 
 (server-mode t)
+
+(defun on-edit-server-done-do-backup ()
+  (interactive)
+  "Run when text is sent to Google Chrome. Do a backup of the
+    stuff sent there in case something goes wrong, e.g. Chrome
+    crashes."
+  (let* ((backup-dir "~/._emacs_chrome-backup")
+         (backup-file (format "%s.txt" (float-time)))
+         (backup-path (concat backup-dir "/" backup-file)))
+    (unless (file-directory-p backup-dir)
+      (make-directory backup-dir))
+    (write-region (point-min) (point-max) backup-path)))
+
 (use-package edit-server
   :ensure t
   :init
   (progn
     (setq edit-server-new-frame nil)
-    (edit-server-start)))
+      (require 'edit-server)
+      (setq edit-server-new-frame nil)
+      (add-hook 'edit-server-done-hook 'on-edit-server-done-do-backup)
+      ;; Save works in edit-server buffers
+      (add-hook 'edit-server-edit-mode-hook
+                (lambda ()
+                  (make-local-variable 'evil-ex-commands)
+                  (setq evil-ex-commands (copy-list evil-ex-commands))
+                  (evil-ex-define-cmd "w[rite]" 'edit-server-save)))
+      (edit-server-start)))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -916,6 +969,10 @@
 
     (define-key magit-status-mode-map (kbd "W") 'magit-toggle-whitespace)))
 
+(use-package discover
+  :ensure t
+  :init (global-discover-mode 1))
+
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 (require 'smtpmail)
@@ -991,6 +1048,7 @@
                                             "Solutions Specialist"
                                             "+358 44 040 7895")
                                           "\n"))
+     (smtpmail-stream-type nil)
      (smtpmail-smtp-service 1025))))
 
 (defun my-mu4e-set-account ()
