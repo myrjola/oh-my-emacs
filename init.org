@@ -232,11 +232,14 @@
 
 #+end_src
 
-
-
 * Evil
 
 #+begin_src emacs-lisp
+(defun helm-occur-on-symbol ()
+  (interactive)
+  (setq isearch-string (evil-find-symbol t))
+  (helm-occur-from-isearch))
+
 (use-package evil
   :ensure t
   :init
@@ -293,7 +296,7 @@
 
     ;; More helm mappings
     (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
-    (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
+    (define-key evil-normal-state-map (kbd ",o") 'helm-occur-on-symbol)
     (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
     (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
     (define-key evil-normal-state-map (kbd ",,") 'helm-mini)
@@ -661,99 +664,100 @@
 ** Evil keybindings
 
 #+begin_src emacs-lisp
+(define-minor-mode evil-org-mode
+  "Buffer local minor mode for evil-org"
+  :init-value nil
+  :lighter " EvilOrg"
+  :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+  :group 'evil-org)
 
-  (define-minor-mode evil-org-mode
-    "Buffer local minor mode for evil-org"
-    :init-value nil
-    :lighter " EvilOrg"
-    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
-    :group 'evil-org)
+(add-hook 'org-mode-hook 'evil-org-mode) ;; only load with org-mode
 
-  (add-hook 'org-mode-hook 'evil-org-mode) ;; only load with org-mode
+(define-key evil-normal-state-map (kbd ",sl") 'org-store-link)
+(define-key evil-normal-state-map (kbd ",ca") 'org-capture)
+(define-key evil-normal-state-map (kbd ",gt") 'gtd)
+(define-key evil-normal-state-map (kbd ",at") 'org-attach)
+(define-key evil-normal-state-map (kbd ",ba") 'previous-buffer)
 
-  (define-key evil-normal-state-map (kbd ",sl") 'org-store-link)
-  (define-key evil-normal-state-map (kbd ",ca") 'org-capture)
-  (define-key evil-normal-state-map (kbd ",gt") 'gtd)
-  (define-key evil-normal-state-map (kbd ",at") 'org-attach)
-  (define-key evil-normal-state-map (kbd ",ba") 'previous-buffer)
+;; regular normal state shortcuts.
+(evil-define-key 'normal evil-org-mode-map
+  "gh" 'outline-up-heading
+  "gj" 'org-forward-heading-same-level
+  "gk" 'org-backward-heading-same-level
+  "gl" 'outline-next-visible-heading
+  "H" 'org-beginning-of-line
+  "L" 'org-end-of-line
+  "t" 'org-todo
+  "$" 'org-end-of-line
+  "^" 'org-beginning-of-line
+  "-" 'org-ctrl-c-minus
+  "<" 'org-metaleft
+  ">" 'org-metaright
+  ",r" 'org-refile
+  ",t" 'org-show-todo-tree
+  ",." 'org-ctrl-c-ctrl-c
+  ",*" 'org-toggle-heading
+  (kbd ",ar") 'org-archive-subtree
+  (kbd ",na") 'org-narrow-to-element
+  (kbd ",nw") 'widen
+  (kbd ",s") 'org-schedule
+  (kbd ",d") 'org-deadline
+  (kbd ",/") 'org-sparse-tree
+  (kbd "RET") 'org-return
+  (kbd ",cs") 'org-screenshot
+  (kbd ",ci") 'org-clock-in
+  (kbd ",co") 'org-clock-out
+  (kbd ",cc") 'org-edit-special
+  )
 
-  ;; regular normal state shortcuts.
-  (evil-define-key 'normal evil-org-mode-map
-    "gh" 'outline-up-heading
-    "gj" 'org-forward-heading-same-level
-    "gk" 'org-backward-heading-same-level
-    "gl" 'outline-next-visible-heading
-    "H" 'org-beginning-of-line
-    "L" 'org-end-of-line
-    "t" 'org-todo
-    "$" 'org-end-of-line
-    "^" 'org-beginning-of-line
-    "-" 'org-ctrl-c-minus
-    "<" 'org-metaleft
-    ">" 'org-metaright
-    ",r" 'org-refile
-    ",t" 'org-show-todo-tree
-    ",." 'org-ctrl-c-ctrl-c
-    ",*" 'org-toggle-heading
-    (kbd ",ar") 'org-archive-subtree
-    (kbd ",na") 'org-narrow-to-element
-    (kbd ",nw") 'widen
-    (kbd ",s") 'org-schedule
-    (kbd ",d") 'org-deadline
-    (kbd ",/") 'org-sparse-tree
-    (kbd "RET") 'org-return
-    (kbd ",cs") 'org-screenshot
-    (kbd ",ci") 'org-clock-in
-    (kbd ",co") 'org-clock-out
-    (kbd ",cc") 'org-edit-special
-    )
+;; normal & insert state shortcuts.
+(mapcar (lambda (state)
+          (evil-define-key state evil-org-mode-map
+        (kbd "TAB") 'org-cycle
+            (kbd "C-<return>") 'org-insert-heading
+            (kbd "C-<") 'org-metaleft
+            (kbd "C->") 'org-metaright
+            (kbd "C-S-<return>") 'org-insert-todo-heading)) '(normal insert))
 
-  ;; normal & insert state shortcuts.
-  (mapcar (lambda (state)
-            (evil-define-key state evil-org-mode-map
-          (kbd "TAB") 'org-cycle
-              (kbd "C-<return>") 'org-insert-heading
-              (kbd "C-S-<return>") 'org-insert-todo-heading)) '(normal insert))
+;; For some reason this binding was broken in org-mode in terminal
+;;(evil-define-key 'insert evil-org-mode-map
+            ;;(kbd "ESC") 'evil-normal-state)
 
-  ;; For some reason this binding was broken in org-mode in terminal
-  ;;(evil-define-key 'insert evil-org-mode-map
-              ;;(kbd "ESC") 'evil-normal-state)
+(define-minor-mode evil-org-capture-mode
+  "Buffer local minor mode for evil-org-capture"
+  :init-value nil
+  :lighter " EvilOrgCapture"
+  :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+  :group 'evil-org)
 
-  (define-minor-mode evil-org-capture-mode
-    "Buffer local minor mode for evil-org-capture"
-    :init-value nil
-    :lighter " EvilOrgCapture"
-    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
-    :group 'evil-org)
+(add-hook 'org-capture-mode-hook 'evil-org-capture-mode) ;; only load with org-capture-mode
 
-  (add-hook 'org-capture-mode-hook 'evil-org-capture-mode) ;; only load with org-capture-mode
+;; regular normal state shortcuts.
+(evil-define-key 'normal evil-org-capture-mode-map
+  (kbd ",cf") 'org-capture-finalize
+  (kbd ",ck") 'org-capture-kill
+  (kbd ",cr") 'org-capture-refile)
 
-  ;; regular normal state shortcuts.
-  (evil-define-key 'normal evil-org-capture-mode-map
-    (kbd ",cf") 'org-capture-finalize
-    (kbd ",ck") 'org-capture-kill
-    (kbd ",cr") 'org-capture-refile)
+(setq org-edit-src-auto-save-idle-delay 1)
 
-  (setq org-edit-src-auto-save-idle-delay 1)
+(define-minor-mode evil-org-src-mode
+  "Buffer local minor mode for evil-org-src"
+  :init-value nil
+  :lighter " EvilOrgSrc"
+  :keymap (make-sparse-keymap) ; defines evil-org-mode-map
+  :group 'evil-org)
 
-  (define-minor-mode evil-org-src-mode
-    "Buffer local minor mode for evil-org-src"
-    :init-value nil
-    :lighter " EvilOrgSrc"
-    :keymap (make-sparse-keymap) ; defines evil-org-mode-map
-    :group 'evil-org)
+(add-hook 'org-src-mode-hook 'evil-org-src-mode) ;; only load with org-capture-mode
 
-  (add-hook 'org-src-mode-hook 'evil-org-src-mode) ;; only load with org-capture-mode
+;; regular normal state shortcuts.
+(evil-define-key 'normal evil-org-src-mode-map
+  (kbd ",cf") 'org-edit-src-exit
+  (kbd ",ck") 'org-edit-src-abort)
 
-  ;; regular normal state shortcuts.
-  (evil-define-key 'normal evil-org-src-mode-map
-    (kbd ",cf") 'org-edit-src-exit
-    (kbd ",ck") 'org-edit-src-abort)
-
-  (eval-after-load 'diminish '(progn
-                                (diminish 'evil-org-mode)
-                                (diminish 'evil-org-capture-mode)
-                                (diminish 'evil-org-src-mode)))
+(eval-after-load 'diminish '(progn
+                              (diminish 'evil-org-mode)
+                              (diminish 'evil-org-capture-mode)
+                              (diminish 'evil-org-src-mode)))
 
 #+end_src
 

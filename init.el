@@ -219,6 +219,11 @@
   (add-hook 'text-mode-hook 'turn-on-fci-mode)
   (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
 
+(defun helm-occur-on-symbol ()
+  (interactive)
+  (setq isearch-string (evil-find-symbol t))
+  (helm-occur-from-isearch))
+
 (use-package evil
   :ensure t
   :init
@@ -275,7 +280,7 @@
 
     ;; More helm mappings
     (define-key evil-normal-state-map (kbd ",gf") 'helm-ls-git-ls)
-    (define-key evil-normal-state-map (kbd ",o") 'helm-occur)
+    (define-key evil-normal-state-map (kbd ",o") 'helm-occur-on-symbol)
     (define-key evil-normal-state-map (kbd "gf") 'helm-for-files)
     (define-key evil-normal-state-map (kbd ",r") 'helm-show-kill-ring)
     (define-key evil-normal-state-map (kbd ",,") 'helm-mini)
@@ -657,6 +662,8 @@
           (evil-define-key state evil-org-mode-map
         (kbd "TAB") 'org-cycle
             (kbd "C-<return>") 'org-insert-heading
+            (kbd "C-<") 'org-metaleft
+            (kbd "C->") 'org-metaright
             (kbd "C-S-<return>") 'org-insert-todo-heading)) '(normal insert))
 
 ;; For some reason this binding was broken in org-mode in terminal
