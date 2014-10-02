@@ -288,6 +288,7 @@
     ;; Misc mappings
     (define-key evil-normal-state-map (kbd ",-") 'calc-dispatch)
     (define-key evil-normal-state-map (kbd ",k") 'kill-buffer)
+    (define-key evil-normal-state-map (kbd ",m") 'mu4e)
 
     ;; Little bit illogical that < means next, but you often want the next error
     ;; so I make it more convenient
@@ -563,8 +564,6 @@
 
 (define-key evil-normal-state-map (kbd ",ag") 'org-agenda)
 (define-key evil-normal-state-map (kbd ",cj") 'org-clock-goto)
-(define-key evil-normal-state-map (kbd ",mi") 'org-mobile-pull)
-(define-key evil-normal-state-map (kbd ",me") 'org-mobile-push)
 
 (setq org-agenda-custom-commands
       '(("r" "Relex agenda"
