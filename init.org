@@ -4,146 +4,148 @@
 
 #+begin_src emacs-lisp
 
-  ;; believe me, you don't need menubar, toolbar nor scrollbar
-  (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
-    (when (fboundp mode) (funcall mode -1)))
+;; believe me, you don't need menubar, toolbar nor scrollbar
+(dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode horizontal-scroll-bar-mode))
+  (when (fboundp mode) (funcall mode -1)))
 
-  ;; Some extra packages not found in elpa
-  (add-to-list 'load-path "~/.emacs.d/lisp/")
+;; Some extra packages not found in elpa
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-  (package-initialize)
-  (add-to-list 'package-archives
+(package-initialize)
+(add-to-list 'package-archives
+               '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives
                '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-  (defun package-safe-install (&rest packages)
-    (dolist (package packages)
-      (unless (package-installed-p package)
-        (package-install package))
-      (if (featurep package)
-          (require package))))
+(defun package-safe-install (&rest packages)
+  (dolist (package packages)
+    (unless (package-installed-p package)
+      (package-install package))
+    (if (featurep package)
+        (require package))))
 
-  ;; use-package is awesome! https://github.com/jwiegley/use-package
-  (package-safe-install 'use-package)
-  (require 'use-package)
+;; use-package is awesome! https://github.com/jwiegley/use-package
+(package-safe-install 'use-package)
+(require 'use-package)
 
-  (use-package diminish :ensure t)
+(use-package diminish :ensure t)
 
-  (setf user-full-name "Martin Yrjölä")
-  (setf user-mail-address "martin.yrjola@gmail.com")
+(setf user-full-name "Martin Yrjölä")
+(setf user-mail-address "martin.yrjola@gmail.com")
 
-  (setf custom-file "~/.emacs.d/custom.el")
-  (load custom-file)
+(setf custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
-  (setf hostname
-        (with-temp-buffer
-          (call-process "hostname" nil t)
-          (let ((hostname* (buffer-string)))
-            (while (string-match "[\r\n\t ]+" hostname*)
-              (setq hostname* (replace-match "" t t hostname*)))
-            hostname*)))
+(setf hostname
+      (with-temp-buffer
+        (call-process "hostname" nil t)
+        (let ((hostname* (buffer-string)))
+          (while (string-match "[\r\n\t ]+" hostname*)
+            (setq hostname* (replace-match "" t t hostname*)))
+          hostname*)))
 
-  (setf inhibit-startup-screen t
-        inhibit-startup-message t
-        inhibit-startup-echo-area-message t)
+(setf inhibit-startup-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 
-  ;; fix the mac PATH variable
-  (defun ome-set-exec-path-from-shell-PATH ()
-    (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-      (setenv "PATH" path-from-shell)
-      (setq exec-path (split-string path-from-shell path-separator))))
+;; fix the mac PATH variable
+(defun ome-set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
 
-  (when (eq system-type 'darwin)
-    (when window-system (ome-set-exec-path-from-shell-PATH)))
+(when (eq system-type 'darwin)
+  (when window-system (ome-set-exec-path-from-shell-PATH)))
 
-  ;; set backup-directory
-  (setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
-        backup-by-copying t
-        version-control t
-        kept-old-versions 2
-        kept-new-versions 20
-        delete-old-versions t)
-  (setq tramp-backup-directory-alist backup-directory-alist)
-  (setq auto-save-file-name-transforms nil)
+;; set backup-directory
+(setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
+      backup-by-copying t
+      version-control t
+      kept-old-versions 2
+      kept-new-versions 20
+      delete-old-versions t)
+(setq tramp-backup-directory-alist backup-directory-alist)
+(setq auto-save-file-name-transforms nil)
 
-  ;; set environment coding system
-  (set-language-environment "UTF-8")
-  ;; auto revert buffer globally
-  (global-auto-revert-mode t)
-  ;; set TAB and indention
-  (setq-default tab-width 4)
-  (setq-default indent-tabs-mode nil)
-  ;; y or n is suffice for a yes or no question
-  (fset 'yes-or-no-p 'y-or-n-p)
-  ;; always add new line to the end of a file
-  (setq require-final-newline t)
-  ;; add no new lines when "arrow-down key" at the end of a buffer
-  (setq next-line-add-newlines nil)
-  ;; prevent the annoying beep on errors
-  (setq ring-bell-function 'ignore)
-  ;; remove trailing whitespaces before save
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  ;; enable to support navigate in camelCase words
-  (global-subword-mode t)
-  ;; newline indents
-  (define-key global-map (kbd "RET") 'newline-and-indent)
+;; set environment coding system
+(set-language-environment "UTF-8")
+;; auto revert buffer globally
+(global-auto-revert-mode t)
+;; set TAB and indention
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
+;; y or n is suffice for a yes or no question
+(fset 'yes-or-no-p 'y-or-n-p)
+;; always add new line to the end of a file
+(setq require-final-newline t)
+;; add no new lines when "arrow-down key" at the end of a buffer
+(setq next-line-add-newlines nil)
+;; prevent the annoying beep on errors
+(setq ring-bell-function 'ignore)
+;; remove trailing whitespaces before save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; enable to support navigate in camelCase words
+(global-subword-mode t)
+;; newline indents
+(define-key global-map (kbd "RET") 'newline-and-indent)
 
-  ;; shell-mode settings
-  (unless (eq system-type 'windows-nt)
-    (setq explicit-shell-file-name "/bin/bash")
-    (setq shell-file-name "/bin/bash"))
-  ;; always insert at the bottom
-  (setq comint-scroll-to-bottom-on-input t)
-  ;; no duplicates in command history
-  (setq comint-input-ignoredups t)
-  ;; what to run when i press enter on a line above the current prompt
-  (setq comint-get-old-input (lambda () ""))
-  ;; max shell history size
-  (setq comint-input-ring-size 1000)
-  ;; show all in emacs interactive output
-  (setenv "PAGER" "cat")
-  ;; set lang to enable Chinese display in shell-mode
-  (setenv "LANG" "en_US.UTF-8")
+;; shell-mode settings
+(unless (eq system-type 'windows-nt)
+  (setq explicit-shell-file-name "/bin/bash")
+  (setq shell-file-name "/bin/bash"))
+;; always insert at the bottom
+(setq comint-scroll-to-bottom-on-input t)
+;; no duplicates in command history
+(setq comint-input-ignoredups t)
+;; what to run when i press enter on a line above the current prompt
+(setq comint-get-old-input (lambda () ""))
+;; max shell history size
+(setq comint-input-ring-size 1000)
+;; show all in emacs interactive output
+(setenv "PAGER" "cat")
+;; set lang to enable Chinese display in shell-mode
+(setenv "LANG" "en_US.UTF-8")
 
-  ;; set text-mode as the default major mode, instead of fundamental-mode
-  ;; The first of the two lines in parentheses tells Emacs to turn on Text mode
-  ;; when you find a file, unless that file should go into some other mode, such
-  ;; as C mode.
-  (setq-default major-mode 'text-mode)
+;; set text-mode as the default major mode, instead of fundamental-mode
+;; The first of the two lines in parentheses tells Emacs to turn on Text mode
+;; when you find a file, unless that file should go into some other mode, such
+;; as C mode.
+(setq-default major-mode 'text-mode)
 
-  ;; Max 80 chars per column
-  (setq-default fill-column 80)
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
-  (add-hook 'prog-mode-hook 'turn-on-auto-fill)
+;; Max 80 chars per column
+(setq-default fill-column 80)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'prog-mode-hook 'turn-on-auto-fill)
 
-  ;; When you visit a file, point goes to the last place where it was when you
-  ;; previously visited the same file.
-  (setq-default save-place t)
-  (setq save-place-file (concat user-emacs-directory ".saved-places"))
-  (require 'saveplace)
+;; When you visit a file, point goes to the last place where it was when you
+;; previously visited the same file.
+(setq-default save-place t)
+(setq save-place-file (concat user-emacs-directory ".saved-places"))
+(require 'saveplace)
 
 
-  ;; Enable recent files mode.
-  (require 'recentf)
-  (recentf-mode t)
+;; Enable recent files mode.
+(require 'recentf)
+(recentf-mode t)
 
-  ;; 50 files ought to be enough.
-  (setq recentf-max-saved-items 50)
+;; 50 files ought to be enough.
+(setq recentf-max-saved-items 50)
 
-  ;; No more <1> <2> after buffer names
-  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-  (require 'uniquify)
+;; No more <1> <2> after buffer names
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+(require 'uniquify)
 
-  ;; use aspell instead of ispell
-  (setq ispell-program-name "aspell"
-        ispell-extra-args '("--sug-mode=ultra"))
+;; use aspell instead of ispell
+(setq ispell-program-name "aspell"
+      ispell-extra-args '("--sug-mode=ultra"))
 
-  ;; On-the-fly syntax checking
-  (use-package flycheck
-    :ensure t
-    :init
-    (add-hook 'prog-mode-hook 'flycheck-mode))
-  (use-package flycheck-ledger
-    :ensure t)
+;; On-the-fly syntax checking
+(use-package flycheck
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'flycheck-mode))
+(use-package flycheck-ledger
+  :ensure t)
 
 #+end_src
 
@@ -690,8 +692,6 @@
   "$" 'org-end-of-line
   "^" 'org-beginning-of-line
   "-" 'org-ctrl-c-minus
-  "<" 'org-metaleft
-  ">" 'org-metaright
   ",r" 'org-refile
   ",t" 'org-show-todo-tree
   ",." 'org-ctrl-c-ctrl-c
@@ -994,10 +994,10 @@
 
 ** rainbow delimiters
 #+begin_src emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t
-    :init
-    (global-rainbow-delimiters-mode))
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 #+end_src
 
 ** ledger mode

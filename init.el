@@ -8,7 +8,9 @@
 
 (package-initialize)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+               '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives
+               '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (defun package-safe-install (&rest packages)
   (dolist (package packages)
@@ -637,8 +639,6 @@
   "$" 'org-end-of-line
   "^" 'org-beginning-of-line
   "-" 'org-ctrl-c-minus
-  "<" 'org-metaleft
-  ">" 'org-metaright
   ",r" 'org-refile
   ",t" 'org-show-todo-tree
   ",." 'org-ctrl-c-ctrl-c
@@ -911,7 +911,7 @@
 (use-package rainbow-delimiters
   :ensure t
   :init
-  (global-rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 (use-package ledger-mode
   :ensure t
