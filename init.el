@@ -12,6 +12,9 @@
 (add-to-list 'package-archives
                '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 (defun package-safe-install (&rest packages)
   (dolist (package packages)
     (unless (package-installed-p package)
@@ -987,6 +990,14 @@
 (use-package discover
   :ensure t
   :init (global-discover-mode 1))
+
+(use-package outorg :ensure t)
+(use-package outshine :ensure t)
+(use-package navi-mode
+  :ensure t
+  :init (progn
+          (add-to-list 'evil-emacs-state-modes 'navi-mode)
+          (define-key evil-normal-state-map (kbd ",nv") 'navi-search-and-switch)))
 
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
