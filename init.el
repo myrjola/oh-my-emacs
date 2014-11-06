@@ -15,16 +15,14 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defun package-safe-install (&rest packages)
-  (dolist (package packages)
-    (unless (package-installed-p package)
-      (package-install package))
-    (if (featurep package)
-        (require package))))
+; install use-package if necessary
+(unless (package-installed-p 'use-package)
+   (package-install 'use-package))
 
-;; use-package is awesome! https://github.com/jwiegley/use-package
-(package-safe-install 'use-package)
+; load use-package
 (require 'use-package)
+
+(use-package better-defaults :ensure better-defaults)
 
 (use-package diminish :ensure t)
 
@@ -55,6 +53,7 @@
 (when (eq system-type 'darwin)
   (when window-system (ome-set-exec-path-from-shell-PATH)))
 
+
 ;; set backup-directory
 (setq backup-directory-alist '(("" . "~/.emacs.d/emacs_backup"))
       backup-by-copying t
@@ -74,8 +73,6 @@
 (setq-default indent-tabs-mode nil)
 ;; y or n is suffice for a yes or no question
 (fset 'yes-or-no-p 'y-or-n-p)
-;; always add new line to the end of a file
-(setq require-final-newline t)
 ;; add no new lines when "arrow-down key" at the end of a buffer
 (setq next-line-add-newlines nil)
 ;; prevent the annoying beep on errors
@@ -115,23 +112,12 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'prog-mode-hook 'turn-on-auto-fill)
 
-;; When you visit a file, point goes to the last place where it was when you
-;; previously visited the same file.
-(setq-default save-place t)
-(setq save-place-file (concat user-emacs-directory ".saved-places"))
-(require 'saveplace)
-
-
 ;; Enable recent files mode.
 (require 'recentf)
 (recentf-mode t)
 
 ;; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
-
-;; No more <1> <2> after buffer names
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-(require 'uniquify)
 
 ;; use aspell instead of ispell
 (setq ispell-program-name "aspell"
@@ -178,19 +164,16 @@
                                (interactive)
                                (scroll-up 1))))
 
-;; show parenthesis match
-(show-paren-mode 1)
-(setq show-paren-style 'expression)
-
-
 ;; frame font
 (if (member "Dejavu Sans Mono" (font-family-list))
     (set-face-attribute
      'default nil :font "Dejavu Sans Mono 9"))
 
 ;; I love solarized-dark
-(package-safe-install 'color-theme-solarized)
-(load-theme 'solarized-dark t)
+(use-package color-theme
+  :ensure color-theme-solarized
+  :init (load-theme 'solarized-dark t))
+
 ;; Make underlines more readable on X11
 (if (equal window-system 'x) (setq x-underline-at-descent-line t) ())
 
@@ -737,7 +720,7 @@
                                 "/processor_ui/current/" "/current/WEB-INF/"))
         (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
                                 "capistrano" "apps")))
-    (let ((remotepath (concat "/ssh:" (car (split-string server "old_" t))
+    (let ((remotepath (concat "/" (car (split-string server "old_" t))
                               ":/opt/" apps-or-capistrano "/" instance
                               old-or-new-current "customer/"
                               (file-name-nondirectory(buffer-file-name)))))
@@ -998,6 +981,17 @@
   :init (progn
           (add-to-list 'evil-emacs-state-modes 'navi-mode)
           (define-key evil-normal-state-map (kbd ",nv") 'navi-search-and-switch)))
+
+(copy-face font-lock-constant-face 'calendar-iso-week-face)
+(set-face-attribute 'calendar-iso-week-face nil
+                    :height 0.7)
+(setq calendar-intermonth-text
+      '(propertize
+        (format "%2d"
+                (car
+                 (calendar-iso-from-absolute
+                  (calendar-absolute-from-gregorian (list month day year)))))
+        'font-lock-face 'calendar-iso-week-face))
 
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
