@@ -202,13 +202,20 @@
     (setq scroll-conservatively 9999
           scroll-preserve-screen-position t)))
 
-;; Fill column indicator causes much slowdown could be because of
+;; Fill column indicator causes much slowdown in large files could be because of
 ;; https://github.com/alpaker/Fill-Column-Indicator/issues/30
-;; (use-package fill-column-indicator
-;;   :ensure t
-;;   :init (progn
-;;   (add-hook 'text-mode-hook 'turn-on-fci-mode)
-;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
+(use-package fill-column-indicator
+  :ensure t
+  :init (progn
+  (add-hook 'message-mode-hook 'turn-on-fci-mode)
+  (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
+
+;; Let's experiment with aggressive indentation
+(use-package aggressive-indent
+  :ensure aggressive-indent
+  :init (add-hook 'prog-mode-hook #'aggressive-indent-mode))
+
+
 
 
 #+end_src
