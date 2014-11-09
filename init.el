@@ -201,11 +201,13 @@
     (setq scroll-conservatively 9999
           scroll-preserve-screen-position t)))
 
-(use-package fill-column-indicator
-  :ensure t
-  :init (progn
-  (add-hook 'text-mode-hook 'turn-on-fci-mode)
-  (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
+;; Fill column indicator causes much slowdown could be because of
+;; https://github.com/alpaker/Fill-Column-Indicator/issues/30
+;; (use-package fill-column-indicator
+;;   :ensure t
+;;   :init (progn
+;;   (add-hook 'text-mode-hook 'turn-on-fci-mode)
+;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode)))
 
 (defun helm-occur-on-symbol ()
   (interactive)
