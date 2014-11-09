@@ -715,33 +715,35 @@
 (defun deploy-customer-config(server instance)
   "Deploy customer-config to server"
   (interactive (list (read-string "Deploy to server: ") (read-string "Instance name: ")))
-  (let (
-        (old-or-new-current (if (equal (car (split-string server "_")) "old")
-                                "/processor_ui/current/" "/current/WEB-INF/"))
-        (apps-or-capistrano (if (equal (car (split-string server "_")) "old")
-                                "capistrano" "apps")))
-    (let ((remotepath (concat "/" (car (split-string server "old_" t))
-                              ":/opt/" apps-or-capistrano "/" instance
-                              old-or-new-current "customer/"
-                              (file-name-nondirectory(buffer-file-name)))))
-      (message "remotepath: %s" remotepath)
+  (let* ((is-old-version (equal (car (split-string server "_")) "old"))
+         (old-or-new-current (if is-old-version
+                                 "/processor_ui/current/" "/current/WEB-INF/"))
+         (apps-or-capistrano (if is-old-version
+                                 "capistrano" "apps"))
+         (remotepath (concat "/" (car (split-string server "old_" t))
+                             ":/opt/" apps-or-capistrano "/" instance
+                             old-or-new-current "customer/"
+                             (file-name-nondirectory(buffer-file-name))))
 
-      (let ((remotecopypath (concat remotepath ".cp." (format-time-string "%s")))
-            (currentfile (buffer-file-name)))
-        (message "remotecopypath: %s" remotecopypath)
-        (find-file remotepath)
-        (save-restriction
-          (widen)
-          (write-region (point-min) (point-max) remotecopypath nil nil nil 'confirm))
-        (diff-no-select (current-buffer) currentfile)
-        (kill-buffer (buffer-name))
-        (find-file currentfile)
-        (save-restriction
-          (widen)
-          (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
+         (remotecopypath (concat remotepath ".cp." (format-time-string "%s")))
+         (currentfile (buffer-file-name)))
+    (message "remotepath: %s" remotepath)
+    (message "remotecopypath: %s" remotecopypath)
+    ;; Copy remote file to backup
+    (find-file remotepath)
+    (save-restriction
+      (widen)
+      (write-region (point-min) (point-max) remotecopypath nil nil nil 'confirm))
+    (diff-no-select (current-buffer) currentfile)
+    (kill-buffer (buffer-name))
+    ;; Copy local file to remote file
+    (find-file currentfile)
+    (save-restriction
+      (widen)
+      (write-region (point-min) (point-max) remotepath nil nil nil 'confirm))
 
-        (find-file currentfile)
-        (display-buffer "*Diff*")))))
+    (find-file currentfile)
+    (display-buffer "*Diff*")))
 
 (define-minor-mode evil-ruby-mode
   "Evil ruby bindings"
