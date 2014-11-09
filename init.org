@@ -145,16 +145,7 @@
 (dolist (mode '(column-number-mode line-number-mode))
   (when (fboundp mode) (funcall mode t)))
 
-;; Toggle line highlighting in all buffers except org-mode because linum can't
-;; handle big files that well
-(global-linum-mode t)
-(add-hook 'org-mode-hook (lambda () (linum-mode -1)))
-;; mu4e windows don't need line numbers as well
-(add-hook 'mu4e-view-mode-hook (lambda () (linum-mode -1)))
-(add-hook 'mu4e-main-mode-hook (lambda () (linum-mode -1)))
-(add-hook 'mu4e-compose-mode-hook (lambda () (linum-mode -1)))
-(add-hook 'mu4e-headers-mode-hook (lambda () (linum-mode -1)))
-(add-hook 'mu4e-about-mode-hook (lambda () (linum-mode -1)))
+(add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
 
 ;; Toggle line highlighting in all buffers
 (global-hl-line-mode t)
